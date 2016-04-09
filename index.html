@@ -11,9 +11,12 @@
 </head>
 <body>
 <div id="add">
-    <input id="node_name" />
-    <input id="add_node_btn" type="button" value="Add Node" />
-    <input id="export_btn" type="button" value="Export" />
+    <form action="javascript:addNode()">
+        <input id="user_say" />
+        <input id="response" />
+        <input id="add_node_btn" type="submit" value="Add Node" />
+        <input id="delete_btn" type="button" value="Delete" />
+    </form>
 </div>
 <div id="cy"></div>
 <script src="./js/code.js"></script>

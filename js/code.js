@@ -123,15 +123,15 @@ cy.on('cxttapend', 'node', function(evt){
   edgeTo = null;
 });
 
-$("#add_node_btn").click(function() {
-  cy.add({
-    group: "nodes",
-    data: { name: $("#node_name").val(), position: { x: 0, y: 0 } }
-  });
+function addNode() {
+    cy.add({
+        group: "nodes",
+        data: { speech: $("#user_say").val()+ " - " + $("#response").val(), position: { x: 0, y: 0 } }
+    });
+}
+$("#delete_btn").click(function() {
+    cy.remove(':selected');
 });
 
-$("#export_btn").click(function() {
-  console.log(cy.json().elements);
-});
 
 // }); // on dom ready
