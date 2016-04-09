@@ -129,9 +129,62 @@ function addNode() {
         data: { speech: $("#user_say").val()+ " - " + $("#response").val(), position: { x: 0, y: 0 } }
     });
 }
+
+$("#export_btn").click(traverse);
+
 $("#delete_btn").click(function() {
     cy.remove(':selected');
 });
 
+
+function getSiblingNodeIds(node) {
+    var incomers = node.incomers().sources();
+    // console.log(incomers.data("id"));
+    var siblings = {};
+    for (var i = 0; i < incomers.length; i++) {
+        var outgoers = incomers[i].outgoers().targets();
+        // console.log(outgoers.data("id"));
+        for (var j = 0; j < outgoers.length; j++) {
+            siblings[outgoers[j].data("id")] = 0;
+        }
+    }
+    return Object.keys(siblings);
+}
+
+function getOutgoerNodeIds(node) {
+    return node.outgoers().targets().map(function(node) { return node.data("id") });
+}
+
+Array.prototype.toObject = function(value) {
+    var obj = {};
+    for (var i = 0; i < this.length; i++) {
+        obj[this[i]] = value;
+    }
+    return obj;
+};
+
+
+function traverse() {
+    var nodes = cy.nodes();
+    console.log(nodes.map(function(node){ return node.id() }));
+
+    var context_out = nodes.map(function(node) {
+        var zero = getSiblingNodeIds(node).toObject(0)
+        console.log(zero);
+        var positive = getOutgoerNodeIds(node).toObject(5);
+        console.log(positive);
+        final = Object.assign(zero, positive);
+        console.log(final);
+        console.log('-------');
+        return final;
+    });
+    console.log(context_out);
+
+    var context_in = nodes.map(function(node) {
+        return node.incomers().length > 0? node.id(): "";
+    });
+
+    console.log(context_in);
+}
 
 // }); // on dom ready
