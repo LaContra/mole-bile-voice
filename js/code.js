@@ -117,6 +117,12 @@ cy.on('cxttapend', 'node', function(evt) {
 
 /* panel control */
 
+$("#clear_btn").click(function() {
+    if (confirm("Are you sure you want to clear all elements?")) {
+        cy.elements().remove();
+    }
+});
+
 // add intent
 $("#add_intent_btn").click(function() {
     cy.$(":selected").unselect();
