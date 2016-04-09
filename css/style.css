@@ -1,18 +1,22 @@
 body { 
-  font: 14px helvetica neue, helvetica, arial, sans-serif;
+   font: 14px helvetica neue, helvetica, arial, sans-serif;
 }
 
 #cy {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
+    height: 100%;
+    width: 80%;
+    position: absolute;
+    left: 20%;
+    top: 0;
 }
 
-#add {
+#panel {
+    width: 20%;
+    min-width: 200px;
+    height: 100%;
     position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 100;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    background-color: lightgray;
 }

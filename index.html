@@ -8,15 +8,27 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 </head>
 <body>
-<div id="add">
-    <form action="javascript:addNode()">
-        <input id="user_say" />
-        <input id="response" />
-        <input id="add_node_btn" type="submit" value="Add Node" />
-        <input id="delete_btn" type="button" value="Delete" />
-    </form>
+<div id="panel">
+    <div>
+        <button id="add_intent_btn" class="btn btn-default" type="submit">Create Intent</button>
+    </div>
+    <div>
+        <form id="intent_info" action="#" hidden>
+            <label>Intent Info</label>
+            <div class="input-group">
+                <span class="input-group-addon">User Says</span>
+                <input id="user_says" type="text" class="form-control" placeholder="Hi" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">Response</span>
+                <input id="response" type="text" class="form-control" placeholder="How are you?" aria-describedby="basic-addon1">
+            </div>
+            <button class="btn btn-default" type="submit">Save</button>
+        </form>
+    </div>
 </div>
 <div id="cy"></div>
 <script src="./js/code.js"></script>
