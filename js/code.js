@@ -25,7 +25,7 @@ var cy = cytoscape({
     style: [{
         selector: 'node',
         css: {
-            'content': 'data(user_says)',
+            'label': 'data(user_says)',
             'text-valign': 'center',
             'text-halign': 'center',
             'color': 'white',
@@ -164,6 +164,10 @@ $("#intent_info").submit(function() {
         user_says: $("#intent_info #user_says").val(),
         response: $("#intent_info #response").val()
     }).unselect();
+});
+
+$("#displayed_field").change(function() {
+    cy.style().selector('node').style("label", "data(" + this.value + ")").update();
 });
 
 // }); // on dom ready
