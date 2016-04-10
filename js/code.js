@@ -170,4 +170,28 @@ $("#displayed_field").change(function() {
     cy.style().selector('node').style("label", "data(" + this.value + ")").update();
 });
 
+$("#submit_btn").click(function(){
+    cy.nodes().map(submitIntent);
+});
+
+function submitIntent(node) {
+    console.log("submit " + node.data("user_says"));
+    // var data = {};
+    // data['name'] = node.id();
+    // data['templates'] = [node.data("user_says")];
+    // data['responses'] = [{'speech': node.data("response")}];
+
+    // $.ajax({
+    //     url: "https://api.api.ai/v1/intents?v=20160403",
+    //     beforeSend: function (request) {
+    //         request.setRequestHeader("Authorization", "Bearer key");
+    //     },
+    //     type: "POST",
+    //     data: JSON.stringify(data),
+    //     contentType: "application/json",
+    //     complete: function(e) { console.log(e)}
+    // });
+}
+
+
 // }); // on dom ready
