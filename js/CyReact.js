@@ -4,66 +4,10 @@ var ReactDOM = require('react-dom');
 var CyReact = React.createClass({
 
   getInitialState: function() {
-    return {cxtdragStart: '', edgeFrom:'', edgeTo:''};
-  },
+    this._cxtdragStart = false;
+    this._edgeFrom = null;
+    this._edgeTo = null;
 
-  selectNode: function(evt) {
-    var node = evt.cyTarget;
-    console.log('select ' + node.id());
-  },
-
-  selectEdge: function(evt) {
-    var edge = evt.cyTarget;
-    console.log('select ' + edge.id());
-  },
-
-  dragNode: function(evt) {
-    var node = evt.cyTarget;
-    console.log( 'cxtdrag ' + node.id() );
-    this.setState({cxtdragStart: 'start'});
-    this.setState({edgeFrom: node});
-  },
-
-  dragOverNode: function(evt) {
-    var node = evt.cyTarget;
-    console.log( 'cxtdragover ' + node.id() );
-    if (this.state.cxtdragStart == '' || node == this.state.edgeFrom) {
-      return;
-    }
-    this.setState({edgeTo: node});
-  },
-
-  dragOutNode: function(evt) {
-    var node = evt.cyTarget;
-    console.log( 'cxtdragout ' + node.id() );
-    if (this.state.cxtdragStart == '' || node != this.state.edgeTo) {
-      return
-    }
-    this.setState({edgeTo: ''});
-  },
-
-  tapEndNode: function(evt) {
-    var node = evt.cyTarget;
-    console.log( 'cxttapend ' + node.id() );
-    if (this.state.cxtdragStart == '') {
-      return
-    }
-    this.setState({cxtdragStart: ''});
-    if (this.state.edgeTo == '') {
-      return
-    }
-    console.log(this.state.edgeFrom.id(), this.state.edgeTo.id());
-    this.state.cy.add({
-      group: "edges",
-      data: {
-        source: this.state.edgeFrom.id(),
-        target: this.state.edgeTo.id()
-      }
-    });
-    this.setState({edgeTo: ''});
-  },
-
-  render: function() {
     var cy = cytoscape({
       container: document.getElementById(this.props.containerId),
 
@@ -113,13 +57,13 @@ var CyReact = React.createClass({
     
       elements: {
         nodes: [
-          { data: { id: 'aaaaaaa', yaya: 'test', name: 'syayayaya' }, position: { x: 215, y: 85 } },
-          { data: { id: 'c', name: 'yy' }, position: { x: 300, y: 85 } },
-          { data: { id: 'd' }, position: { x: 215, y: 175 } },
-          { data: { id: 'f' }, position: { x: 300, y: 175 } }
+          { data: { id: 'a', yaya: 'test', name: 'a' }, position: { x: 215, y: 85 } },
+          { data: { id: 'b', name: 'b' }, position: { x: 300, y: 85 } },
+          { data: { id: 'c', name: 'c' }, position: { x: 215, y: 175 } },
+          { data: { id: 'd', name: 'd' }, position: { x: 300, y: 175 } }
         ],
         edges: [
-          { data: { id: 'ad', source: 'aaaaaaa', target: 'd' } }
+          { data: { id: 'ac', source: 'a', target: 'c' } }
           // { data: { id: 'eb', source: 'e', target: 'b' } }
         ],
       },
@@ -130,16 +74,54 @@ var CyReact = React.createClass({
       }
     });
 
-    this.setState({cy: cy});
-
-    cy.on('select', 'node', this.selectNode);
-    cy.on('select', 'edge', this.selectEdge);
     cy.on('cxtdrag', 'node', this.dragNode);
     cy.on('cxtdragover', 'node', this.dragOverNode);
     cy.on('cxtdragout', 'node', this.dragOutNode);
     cy.on('cxttapend', 'node', this.tapEndNode);
-    console.log("bind event");
-  }
+
+    return {cy: cy};
+  },
+
+  addEdge: function(source, target) {
+    this.state.cy.add({group: "edges",data: {source: source, target: target}});
+  },
+
+  dragNode: function(evt) {
+    var node = evt.cyTarget;
+    this._cxtdragStart = true;
+    this._edgeFrom = node;
+  },
+
+  dragOverNode: function(evt) {
+    var node = evt.cyTarget;
+    if (!this._cxtdragStart || node == this._edgeFrom) {
+        return;
+    }
+    this._edgeTo = node;
+  },
+
+  dragOutNode: function(evt) {
+    var node = evt.cyTarget;
+    if (!this._cxtdragStart || node != this._edgeTo) {
+        return
+    }
+    this._edgeTo = null;
+  },
+
+  tapEndNode: function(evt) {
+    var node = evt.cyTarget;
+    if (!this._cxtdragStart) {
+        return
+    }
+    this._cxtdragStart = false;
+    if (this._edgeTo == null) {
+        return
+    }
+    this.addEdge(this._edgeFrom.id(), this._edgeTo.id());
+    this._edgeTo = null;
+  },
+
+  render: function() { return }
 });
 
 ReactDOM.render(
