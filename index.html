@@ -11,40 +11,9 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 </head>
 <body>
-<div id="panel">
-    <div>
-        <button id="clear_btn" class="btn btn-default">Clear</button>
-    </div>
-    <div>
-        <button id="add_intent_btn" class="btn btn-default">Create Intent</button>
-    </div>
-    <div class="input-group">
-        <span class="input-group-addon">Displayed Field</span>
-        <select id="displayed_field" class="form-control">
-            <option value="user_says">User says</option>
-            <option value="response">Response</option>
-            <option value="combine">Combine</option>
-        </select>
-    </div>
-    <div>
-        <form id="intent_info" action="#" hidden>
-            <label>Intent Info</label>
-            <div class="input-group">
-                <span class="input-group-addon">User Says</span>
-                <input id="user_says" type="text" class="form-control" placeholder="Hi" aria-describedby="basic-addon1">
-            </div>
-            <div class="input-group">
-                <span class="input-group-addon">Response</span>
-                <input id="response" type="text" class="form-control" placeholder="How are you?" aria-describedby="basic-addon1">
-            </div>
-            <button class="btn btn-default" type="submit">Save</button>
-        </form>
-    </div>
-    <div>
-        <button id="submit_btn" class="btn btn-default">Submit</button>
-    </div>
-</div>
-<div id="cy"></div>
-<script src="./js/code.js"></script>
+<div id="panel"></div>
+<div id="react" class="cy_container"></div>
+<script src="http://127.0.0.1:8080/webpack-dev-server.js"></script>
+<script src="./js/bundle.js"></script>
 </body>
 </html>
