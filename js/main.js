@@ -1,3 +1,8 @@
-require("./LocalStorage");
-require("./Panel");
-require("./CyReact");
+import React from 'react'
+import { render } from 'react-dom'
+import App from './App'
+
+render(
+	<App />,
+	document.getElementById('root')
+)

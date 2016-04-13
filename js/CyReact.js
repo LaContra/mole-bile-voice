@@ -1,5 +1,4 @@
 var React = require('react');
-var ReactDOM = require('react-dom');
 var LocalStorage = require('./LocalStorage');
 
 var CyReact = React.createClass({
@@ -12,7 +11,7 @@ var CyReact = React.createClass({
     window.sendCreateCyIntentRequest = this.sendCreateCyIntentRequest;
   },
 
-  getInitialState: function() {
+  componentDidMount: function () {
     this._cxtdragStart = false;
     this._edgeFrom = null;
     this._edgeTo = null;
@@ -96,11 +95,9 @@ var CyReact = React.createClass({
             cy.$(':selected').unselect().remove();
         }
     })
-
-    return {cy: cy};
   },
 
-  //TODO
+  // TODO
   removeIntents: function() {
     this.state.cy.elements().remove();
   },
@@ -208,12 +205,11 @@ var CyReact = React.createClass({
     this._edgeTo = null;
   },
 
-  render: function() { return }
+  render: function() {
+    return (
+      <div id="react" className="cy_container"></div>
+    );
+  }
 });
-
-ReactDOM.render(
-  <CyReact containerId="react"/>,
-  document.getElementById("react")
-);
 
 module.exports = CyReact;

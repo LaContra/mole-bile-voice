@@ -4,7 +4,7 @@ var ReactDOM = require('react-dom');
 var Panel = React.createClass({
     render: function() {
         return (
-            <div>
+            <div id="panel">
                 <IntentButtons />
                 <IntentDisplayedFields />
                 <IntentProperty />
@@ -109,10 +109,5 @@ var IntentProperty = React.createClass({
         );
     }
 });
-
-ReactDOM.render(
-  <Panel />,
-  document.getElementById("panel")
-);
 
 module.exports = Panel;
