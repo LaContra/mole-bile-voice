@@ -71,6 +71,7 @@ var CyReact = React.createClass({
             padding: 5
         }
     });
+    this.setState({cy: cy});
 
     /* Edge control */
     cy.on('cxtdrag', 'node', this.dragNode);
@@ -95,6 +96,10 @@ var CyReact = React.createClass({
             cy.$(':selected').unselect().remove();
         }
     })
+  },
+
+  getInitialStates: function() {
+    return {cy: ''};
   },
 
   // TODO
