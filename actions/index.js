@@ -9,3 +9,9 @@ export const addIntent = () => {
     type: "ADD_INTENT"
   }
 }
+
+export const updateIntentLabel = (event) => {
+  return {
+    type: "UPDATE_INTENT_LABEL"
+  }
+}

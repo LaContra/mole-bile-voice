@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
-import intent from './intent'
+import Intent from './Intent'
+import IntentProps from './IntentProps'
 
 const voiceUIApp = combineReducers({
-  intent
+  Intent,
+  IntentProps
 })
 
 export default voiceUIApp

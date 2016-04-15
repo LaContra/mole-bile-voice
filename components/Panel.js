@@ -1,45 +1,18 @@
 import React from 'react'
 import IntentControl from '../containers/IntentControl'
+import IntentPropDisplay from '../containers/IntentPropDisplay'
 
 var Panel = React.createClass({
     render: function() {
         return (
             <div id="panel">
                 <IntentControl />
-                <IntentDisplayedFields />
+                <IntentPropDisplay />
                 <IntentProperty />
             </div>
         );
     }
 });
-
-// <IntentDisplayedFields />
-//                 <IntentProperty />
-
-var IntentDisplayedFields = React.createClass({
-
-    // TODO
-    updateIntentLabel: function(evt) {
-        console.log("update label in panel: "+evt.target.value);
-        var updateCyIntentLabel = window.updateCyIntentLabel;
-        updateCyIntentLabel(evt.target.value);
-    },
-
-    render: function() {
-        return (
-            <div class="input-group">
-                <span className="input-group-addon">Displayed Field</span>
-                <select id="displayed_field" className="form-control" onChange={this.updateIntentLabel}>
-                    <option value="user_says">User says</option>
-                    <option value="response">Response</option>
-                    <option value="combine">Combine</option>
-                </select>
-            </div>
-        );
-    }
-});
-
-
 
 var IntentProperty = React.createClass({
 

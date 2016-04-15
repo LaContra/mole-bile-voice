@@ -2,9 +2,7 @@ import { connect } from 'react-redux'
 import { clearIntents, addIntent } from '../actions'
 import IntentButtons from '../components/IntentButtons'
 
-const mapStateToProps = () => {
-  return {}
-}
+const mapStateToProps = () => { return {} }
 
 const mapDispatchToProps = (dispatch) => {
   return {

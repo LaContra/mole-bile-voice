@@ -1,4 +1,4 @@
-const intent = (state = '', action) => {
+const Intent = (state = '', action) => {
   // TODO: return correct state: clear/add intents
   switch(action.type) {
     case 'CLEAR_INTENTS':
@@ -13,7 +13,7 @@ const intent = (state = '', action) => {
   }
 }
 
-export default intent
+export default Intent
 
 //     // TODO
 //     /* panel control */
