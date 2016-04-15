@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { updateIntentLabel } from '../actions'
-import IntentPropFields from '../components/IntentPropFields'
+import IntentDisplayOptions from '../components/IntentDisplayOptions'
 
 const mapStateToProps = () => { return {} }
 
@@ -15,6 +15,6 @@ const mapDispatchToProps = (dispatch) => {
 var IntentPropDisplay = connect(
   mapStateToProps,
   mapDispatchToProps
-)(IntentPropFields)
+)(IntentDisplayOptions)
 
 export default IntentPropDisplay

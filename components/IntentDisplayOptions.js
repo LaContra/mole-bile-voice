@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const IntentPropFields = ({ onUpdateIntentLabelClick }) => (
+const IntentDisplayOptions = ({ onUpdateIntentLabelClick }) => (
   <div class="input-group">
     <span className="input-group-addon">Displayed Field</span>
     <select id="displayed_field" className="form-control" onChange={(event) => onUpdateIntentLabelClick(event)}>
@@ -11,8 +11,8 @@ const IntentPropFields = ({ onUpdateIntentLabelClick }) => (
   </div>
 )
 
-IntentPropFields.propTypes = {
+IntentDisplayOptions.propTypes = {
   onUpdateIntentLabelClick: PropTypes.func.isRequired
 }
 
-export default IntentPropFields
+export default IntentDisplayOptions
