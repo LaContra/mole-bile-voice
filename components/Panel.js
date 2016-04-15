@@ -1,13 +1,13 @@
 import React from 'react'
 import IntentControl from '../containers/IntentControl'
-import IntentPropDisplay from '../containers/IntentPropDisplay'
+import IntentNameDisplay from '../containers/IntentNameDisplay'
 
 var Panel = React.createClass({
     render: function() {
         return (
             <div id="panel">
                 <IntentControl />
-                <IntentPropDisplay />
+                <IntentNameDisplay />
                 <IntentProperty />
             </div>
         );

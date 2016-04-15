@@ -12,9 +12,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-var IntentPropDisplay = connect(
+var IntentNameDisplay = connect(
   mapStateToProps,
   mapDispatchToProps
 )(IntentDisplayOptions)
 
-export default IntentPropDisplay
+export default IntentNameDisplay
