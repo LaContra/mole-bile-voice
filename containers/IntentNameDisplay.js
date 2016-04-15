@@ -12,7 +12,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-var IntentNameDisplay = connect(
+const IntentNameDisplay = connect(
   mapStateToProps,
   mapDispatchToProps
 )(IntentDisplayOptions)

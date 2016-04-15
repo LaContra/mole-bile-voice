@@ -7,6 +7,9 @@ const Intent = (state = '', action) => {
     case 'ADD_INTENT':
       console.log('add intent');
       return state;
+    case 'SEND_CREATE_INTENT_REQUEST':
+      console.log('send create intent request');
+      return state
     default:
       console.log('default state');
       return state;
@@ -31,3 +34,8 @@ export default Intent
 //         var unselectElements = window.unselectElements;
 //         unselectElements();
 //     },
+// TODO
+    // sendCreateIntentRequest:function(){
+    //     var sendCreateCyIntentRequest = window.sendCreateCyIntentRequest;
+    //     sendCreateCyIntentRequest();
+    // },

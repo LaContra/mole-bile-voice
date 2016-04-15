@@ -15,3 +15,15 @@ export const updateIntentLabel = (event) => {
     type: "UPDATE_INTENT_LABEL"
   }
 }
+
+export const saveIntentProperties = () => {
+  return {
+    type: "SAVE_INTENT_PROPERTIES"
+  }
+}
+
+export const sendCreateIntentRequest = () => {
+  return {
+    type: "SEND_CREATE_INTENT_REQUEST"
+  }
+}
