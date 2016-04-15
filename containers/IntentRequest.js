@@ -4,7 +4,10 @@ import { sendCreateIntentRequest } from '../actions'
 
 let IntentRequest = ({ dispatch }) => (
   <div>
-    <button id="submit_btn" className="btn btn-default" onClick={() => dispatch(sendCreateIntentRequest())}>Submit</button>
+    <button id="submit_btn" 
+      className="btn btn-default" 
+      onClick={() => dispatch(sendCreateIntentRequest())}>Submit
+    </button>
   </div>
 )
 

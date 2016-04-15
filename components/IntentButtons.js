@@ -3,15 +3,13 @@ import React, { PropTypes } from 'react'
 const IntentButtons = ({ onClearIntentsClick, onAddIntentClick }) => (
   <div>
     <div>
-      <button 
-        id="clear_btn" 
+      <button id="clear_btn" 
         className="btn btn-default" 
         onClick={() => onClearIntentsClick()}>Clear
       </button>
     </div>
     <div>
-      <button 
-        id="add_intent_btn" 
+      <button id="add_intent_btn" 
         className="btn btn-default"
         onClick={() => onAddIntentClick()}>Create Intent
       </button>
