@@ -9,6 +9,4 @@ const App = () => (
 	</div>
 )
 
-// <div id="react" className="cy_container"></div>
-
 export default App
