@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { clearIntents } from '../actions'
+import { clearIntents, addIntent } from '../actions'
 import IntentButtons from '../components/IntentButtons'
 
 const mapStateToProps = () => {
@@ -10,6 +10,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onClearIntentsClick: () => {
       dispatch(clearIntents())
+    },
+    onAddIntentClick: () => {
+      dispatch(addIntent())
     }
   }
 }
