@@ -149,23 +149,36 @@ var CyReact = React.createClass({
 
   // TODO
   sendCreateCyIntentRequest: function() {
+    console.log("submit intents");
     this.state.cy.nodes().map(function(node) {
-        console.log("submit " + node.data("user_says"));
-        // var data = {};
-        // data['name'] = node.id();
-        // data['templates'] = [node.data("user_says")];
-        // data['responses'] = [{'speech': node.data("response")}];
+        var contextsIn = [], contextsOut = [];
+        node.connectedEdges().map(function(edge) {
+          var context = edge.source().data("id") + "_to_" + edge.target().data("id");
+          (edge.source() == node? contextsOut: contextsIn).push(context);
+        });
+        var data = {
+          name: node.id(),
+          contexts: contextsIn,
+          templates: [node.data("user_says")],
+          responses: [
+            {
+              speech: node.data("response"),
+              affectedContexts: contextsOut
+            }
+          ]
+        };
+        console.log(data);
 
-        // $.ajax({
-        //     url: "https://api.api.ai/v1/intents?v=20160403",
-        //     beforeSend: function (request) {
-        //         request.setRequestHeader("Authorization", "Bearer key");
-        //     },
-        //     type: "POST",
-        //     data: JSON.stringify(data),
-        //     contentType: "application/json",
-        //     complete: function(e) { console.log(e)}
-        // });
+        $.ajax({
+            url: "https://api.api.ai/v1/intents?v=20160416",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", "Bearer 72f88cb9163d483eb552228db168e041");
+            },
+            type: "POST",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            complete: function(e) { console.log(e)}
+        });
     });
   },
 
