@@ -1,10 +1,14 @@
 import { combineReducers } from 'redux'
-import Intent from './Intent'
-import IntentProps from './IntentProps'
+import nameDisplayFilter from './nameDisplayFilter'
+import cyElements from './cyElements'
+import cyStyle from './cyStyle'
+import intentPropertyPanel from './intentPropertyPanel'
 
 const voiceUIApp = combineReducers({
-  Intent,
-  IntentProps
+  nameDisplayFilter,
+  cyElements,
+  cyStyle,
+  intentPropertyPanel
 })
 
 export default voiceUIApp

@@ -1,10 +1,13 @@
 import React, { PropTypes } from 'react'
 
-const IntentProperty = ({ onSaveIntentPropertiesClick }) => (
+const IntentProperty = ({ intentPropertyPanel, onSaveIntentPropertiesClick, onUserSaysChange, onResponseChange }) => (
   <form id="intent_info" 
     action="#" 
-    hidden 
-    onSubmit={e => {e.preventDefault(); onSaveIntentPropertiesClick();}}>
+    hidden={ intentPropertyPanel.hideProperty }
+    onSubmit={e => {
+      e.preventDefault(); 
+      onSaveIntentPropertiesClick(intentPropertyPanel.selectedNode, $("#user_says").val(), $("#response").val());
+    }}>
     <label>Intent Info</label>
     <div className="input-group">
       <span className="input-group-addon">User Says</span>
@@ -12,7 +15,9 @@ const IntentProperty = ({ onSaveIntentPropertiesClick }) => (
         type="text" 
         className="form-control" 
         placeholder="Hi" 
-        aria-describedby="basic-addon1" />
+        value= { intentPropertyPanel.userSays }
+        aria-describedby="basic-addon1"
+        onChange={e => onUserSaysChange(e.target.value)} />
     </div>
     <div className="input-group">
       <span className="input-group-addon">Response</span>
@@ -20,14 +25,24 @@ const IntentProperty = ({ onSaveIntentPropertiesClick }) => (
         type="text" 
         className="form-control" 
         placeholder="How are you?" 
-        aria-describedby="basic-addon1" />
+        value={ intentPropertyPanel.response }
+        aria-describedby="basic-addon1" 
+        onChange={e => onResponseChange(e.target.value)} />
     </div>
     <button className="btn btn-default" type="submit">Save</button>
   </form>
 )
 
 IntentProperty.propTypes = {
-  onSaveIntentPropertiesClick: PropTypes.func.isRequired
+  intentPropertyPanel: PropTypes.objectOf(PropTypes.shape({
+    hideProperty: PropTypes.bool.isRequired,
+    userSays: PropTypes.string.isRequired,
+    response: PropTypes.string.isRequired,
+    selectedNode: PropTypes.number.isRequired
+  }).isRequired).isRequired,
+  onSaveIntentPropertiesClick: PropTypes.func.isRequired,
+  onUserSaysChange: PropTypes.func.isRequired,
+  onResponseChange: PropTypes.func.isRequired
 }
 
 export default IntentProperty

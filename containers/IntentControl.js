@@ -7,7 +7,9 @@ const mapStateToProps = () => { return {} }
 const mapDispatchToProps = (dispatch) => {
   return {
     onClearIntentsClick: () => {
-      dispatch(clearIntents())
+      if (confirm("Are you sure you want to clear all elements?")) {
+        dispatch(clearIntents())
+      }      
     },
     onAddIntentClick: () => {
       dispatch(addIntent())
