@@ -60,7 +60,7 @@ const Cy = React.createClass({
     this.cy.on('cxttapend', 'node', this.tapEndNode);
 
     // save elements to local storage
-    this.cy.on('remove, position, data', this.saveToLocalStorage);
+    this.cy.on('position', this.saveToLocalStorage);
 
     // show or hide intent info editor
     this.cy.on('select, unselect', 'node, edge', this.showHideIntentProperty);
