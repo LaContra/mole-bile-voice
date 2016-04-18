@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import $ from 'jquery'
 
 const IntentProperty = ({ intentPropertyPanel, onSaveIntentPropertiesClick, onUserSaysChange, onResponseChange }) => (
   <form id="intent_info" 

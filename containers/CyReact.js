@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../utils/LocalStorage'
 import { addEdge, showHideIntentProperty } from '../actions'
+import cytoscape from 'cytoscape'
+
 
 const Cy = React.createClass({
   componentDidMount: function() {
