@@ -2,7 +2,7 @@ const DefaultVisualStyle = [
   {
     selector: 'node',
     css: {
-      'label': 'data(user_says)',
+      'label': 'data(USER_SAYS)',
       'text-valign': 'center',
       'text-halign': 'center',
       'color': 'white',

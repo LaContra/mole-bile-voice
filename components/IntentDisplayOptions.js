@@ -5,10 +5,9 @@ const IntentDisplayOptions = ({ onUpdateIntentLabelClick }) => (
     <span className="input-group-addon">Displayed Field</span>
     <select id="displayed_field" 
       className="form-control" 
-      onChange={(event) => onUpdateIntentLabelClick(event)}>
-        <option value="user_says">User says</option>
-        <option value="response">Response</option>
-        <option value="combine">Combine</option>
+      onChange={(e) => onUpdateIntentLabelClick(e.target.value)}>
+        <option value="USER_SAYS">User says</option>
+        <option value="RESPONSE">Response</option>
     </select>
   </div>
 )

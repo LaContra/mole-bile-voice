@@ -47,9 +47,10 @@ export const chnageResponseField = (value) => {
 }
 
 // TODO
-export const updateIntentLabel = (event) => {
+export const updateIntentLabel = (value) => {
   return {
-    type: "UPDATE_INTENT_LABEL"
+    type: "UPDATE_INTENT_LABEL",
+    value
   }
 }
 

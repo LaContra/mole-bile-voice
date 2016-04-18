@@ -45,24 +45,17 @@ const cyElements = (state, action) => {
       return state.map(t => modifyElement(unselectElement(t), action.nodeId, action.userSays, action.response))
 
     // TODO: gaigai
-    case "UPDATE_INTENT_LABEL":
-      console.log("update label in panel");
-      return state
-      // value = evt.target.value)
-      // this.state.cy.style().selector('node').style("label", "data(" + value + ")").update();
-
-    // TODO: gaigai
     // modify intent info
     case 'SEND_CREATE_INTENT_REQUEST':
       console.log("send create intent request");
       return state
 //   sendCreateCyIntentRequest: function() {
 //     this.state.cy.nodes().map(function(node) {
-//         console.log("submit " + node.data("user_says"));
+//         console.log("submit " + node.data("USER_SAYS"));
 //         // var data = {};
 //         // data['name'] = node.id();
-//         // data['templates'] = [node.data("user_says")];
-//         // data['responses'] = [{'speech': node.data("response")}];
+//         // data['templates'] = [node.data("USER_SAYS")];
+//         // data['responses'] = [{'speech': node.data("RESPONSE")}];
 
 //         // $.ajax({
 //         //     url: "https://api.api.ai/v1/intents?v=20160403",
