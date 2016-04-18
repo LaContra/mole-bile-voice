@@ -5,10 +5,11 @@ var LocalStorage = React.createClass({
   statics: {
     saveElements: function(elements) {
       let elementId = 0
-      if (typeof elements.nodes !== undefined) {
-          elementId = parseInt(elements.nodes.reduce((previous, current) => {
-          if (current.data.id > previous)
+      if (elements !== undefined) {
+          elementId = parseInt(elements.reduce((previous, current) => {
+          if (parseInt(current.data.id) !== NaN && current.data.id > previous) {
             return current.data.id
+          }
           return previous
         }, 0)) + 1;
       }
@@ -20,10 +21,10 @@ var LocalStorage = React.createClass({
       if (key == null) {
         var elements = localStorage.getItem("elements");
         if (elements && elements != "{}") {
-            return JSON.parse(elements);
+          return JSON.parse(elements);
         }
         else {
-            return null;
+          return null;
         }
       }
       else {

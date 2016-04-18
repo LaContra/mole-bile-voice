@@ -19,7 +19,8 @@ export const addEdge = (source, target) => {
   return {
     type: "ADD_EDGE",
     source,
-    target
+    target,
+    id: intentId++
   }
 }
 
@@ -46,10 +47,10 @@ export const chnageResponseField = (value) => {
   }
 }
 
-// TODO
-export const updateIntentLabel = (event) => {
+export const updateIntentLabel = (value) => {
   return {
-    type: "UPDATE_INTENT_LABEL"
+    type: "UPDATE_INTENT_LABEL",
+    value
   }
 }
 

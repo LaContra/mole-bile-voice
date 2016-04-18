@@ -15,7 +15,7 @@ const cyElements = (state, action) => {
   if (typeof state === 'undefined') {
     const localState = LocalStorage.getElements();
     console.log(localState)
-    return localState == null? []:localState.nodes
+    return localState == null? []: localState
   }
 
   switch(action.type) {
@@ -37,19 +37,12 @@ const cyElements = (state, action) => {
       console.log("add edge");
       return [ ...state.map(t => unselectElement(t)), {
           group: "edges",
-          data: {source: action.source, target: action.target},
+          data: {source: action.source, target: action.target, id: action.id},
       }]
     
     case "SAVE_INTENT_PROPERTIES":
       console.log("save intent properties");
       return state.map(t => modifyElement(unselectElement(t), action.nodeId, action.userSays, action.response))
-
-    // TODO: gaigai
-    case "UPDATE_INTENT_LABEL":
-      console.log("update label in panel");
-      return state
-      // value = evt.target.value)
-      // this.state.cy.style().selector('node').style("label", "data(" + value + ")").update();
 
     // TODO: gaigai
     // modify intent info
@@ -58,11 +51,11 @@ const cyElements = (state, action) => {
       return state
 //   sendCreateCyIntentRequest: function() {
 //     this.state.cy.nodes().map(function(node) {
-//         console.log("submit " + node.data("user_says"));
+//         console.log("submit " + node.data("USER_SAYS"));
 //         // var data = {};
 //         // data['name'] = node.id();
-//         // data['templates'] = [node.data("user_says")];
-//         // data['responses'] = [{'speech': node.data("response")}];
+//         // data['templates'] = [node.data("USER_SAYS")];
+//         // data['responses'] = [{'speech': node.data("RESPONSE")}];
 
 //         // $.ajax({
 //         //     url: "https://api.api.ai/v1/intents?v=20160403",

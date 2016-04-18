@@ -6,8 +6,8 @@ const mapStateToProps = () => { return {} }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onUpdateIntentLabelClick: (event) => {
-      dispatch(updateIntentLabel(event))
+    onUpdateIntentLabelClick: (value) => {
+      dispatch(updateIntentLabel(value))
     }
   }
 }

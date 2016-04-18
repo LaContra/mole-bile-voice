@@ -2,10 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../utils/LocalStorage'
 import { addEdge, showHideIntentProperty } from '../actions'
+import cytoscape from 'cytoscape'
+
 
 const Cy = React.createClass({
   componentDidMount: function() {
-    this.updateCy();
+    this.createCy();
   },
 
   componentDidUpdate: function() {
@@ -18,7 +20,13 @@ const Cy = React.createClass({
       !(nextProps.graph.style === this.props.graph.style))
   },
 
-  updateCy: function() {
+  updateCy: function () {
+    this.cy.remove("node");
+    this.cy.add(this.props.graph.elements);
+    this.cy.style(this.props.graph.style);
+  },
+
+  createCy: function() {
     this.cy = cytoscape({
       container: document.getElementById(this.props.containerId),
 
@@ -54,7 +62,7 @@ const Cy = React.createClass({
     this.cy.on('cxttapend', 'node', this.tapEndNode);
 
     // save elements to local storage
-    this.cy.on('remove, position, data', this.saveToLocalStorage);
+    this.cy.on('position', this.saveToLocalStorage);
 
     // show or hide intent info editor
     this.cy.on('select, unselect', 'node, edge', this.showHideIntentProperty);
@@ -109,16 +117,17 @@ const Cy = React.createClass({
   },
 
   showHideIntentProperty: function() {
-    const selectedElements = this.cy.$(":selected");
+    const selectedEdges = this.cy.$("edge:selected");
     const selectedNodes = this.cy.$("node:selected");
-    let targetNode = null
-    if (selectedNodes !== undefined && selectedNodes.length == 1)
-      targetNode = selectedNodes[0].json()
+    let targetNode = null;
+    if (selectedEdges.length == 0 && selectedNodes !== undefined && selectedNodes.length == 1) {
+      targetNode = selectedNodes[0].json();
+    }
     this.props.showHideIntentProperty(targetNode);
   },
 
   saveToLocalStorage: function() {
-    LocalStorage.saveElements(this.cy.json().elements)
+    LocalStorage.saveElements([...this.cy.nodes().jsons(), ...this.cy.edges().jsons()])
   },
 
   render: function(){
