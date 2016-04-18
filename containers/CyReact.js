@@ -5,7 +5,7 @@ import { addEdge, showHideIntentProperty } from '../actions'
 
 const Cy = React.createClass({
   componentDidMount: function() {
-    this.updateCy();
+    this.createCy();
   },
 
   componentDidUpdate: function() {
@@ -18,7 +18,13 @@ const Cy = React.createClass({
       !(nextProps.graph.style === this.props.graph.style))
   },
 
-  updateCy: function() {
+  updateCy: function () {
+    this.cy.remove("node");
+    this.cy.add(this.props.graph.elements);
+    this.cy.style(this.props.graph.style);
+  },
+
+  createCy: function() {
     this.cy = cytoscape({
       container: document.getElementById(this.props.containerId),
 
