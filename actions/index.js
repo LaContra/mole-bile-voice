@@ -19,7 +19,8 @@ export const addEdge = (source, target) => {
   return {
     type: "ADD_EDGE",
     source,
-    target
+    target,
+    id: intentId++
   }
 }
 

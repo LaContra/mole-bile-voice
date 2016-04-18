@@ -15,7 +15,7 @@ const cyElements = (state, action) => {
   if (typeof state === 'undefined') {
     const localState = LocalStorage.getElements();
     console.log(localState)
-    return localState == null? []:localState.nodes
+    return localState == null? []: localState
   }
 
   switch(action.type) {
@@ -37,7 +37,7 @@ const cyElements = (state, action) => {
       console.log("add edge");
       return [ ...state.map(t => unselectElement(t)), {
           group: "edges",
-          data: {source: action.source, target: action.target},
+          data: {source: action.source, target: action.target, id: action.id},
       }]
     
     case "SAVE_INTENT_PROPERTIES":

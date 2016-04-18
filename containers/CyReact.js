@@ -124,7 +124,7 @@ const Cy = React.createClass({
   },
 
   saveToLocalStorage: function() {
-    LocalStorage.saveElements(this.cy.json().elements)
+    LocalStorage.saveElements([...this.cy.nodes().jsons(), ...this.cy.edges().jsons()])
   },
 
   render: function(){
