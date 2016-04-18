@@ -115,11 +115,12 @@ const Cy = React.createClass({
   },
 
   showHideIntentProperty: function() {
-    const selectedElements = this.cy.$(":selected");
+    const selectedEdges = this.cy.$("edge:selected");
     const selectedNodes = this.cy.$("node:selected");
-    let targetNode = null
-    if (selectedNodes !== undefined && selectedNodes.length == 1)
-      targetNode = selectedNodes[0].json()
+    let targetNode = null;
+    if (selectedEdges.length == 0 && selectedNodes !== undefined && selectedNodes.length == 1) {
+      targetNode = selectedNodes[0].json();
+    }
     this.props.showHideIntentProperty(targetNode);
   },
 
