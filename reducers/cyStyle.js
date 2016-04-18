@@ -5,7 +5,7 @@ const cyStyle = (state = DefaultVisualStyle, action) => {
     case "UPDATE_INTENT_LABEL":
       return state.map(s => {
         if (s.selector == 'node') {
-          s.css.label = 'data(' + action.value + ')';
+          return Object.assign({}, s, {css: Object.assign({}, s.css, {label: 'data(' + action.value + ')'})})
         }
         return s
       })
