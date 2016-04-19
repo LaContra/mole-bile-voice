@@ -1,4 +1,5 @@
 import LocalStorage from '../utils/LocalStorage'
+import $ from 'jquery'
 
 const unselectElement = (element) => {
   return Object.assign({}, element, {selected: false})
@@ -9,6 +10,51 @@ const modifyElement = (element, targetId, userSays, response) => {
     return element
   }
   return Object.assign({}, element, {data: {USER_SAYS: userSays, RESPONSE: response, id: targetId}})
+}
+
+const getContextName = (edge) => {
+  return edge.data.source + "_to_" + edge.data.target
+}
+
+const buildIntentsDataFromCyElements = (state) => {
+  // for every nodes
+  return state.filter(e => { return e.group == "nodes" }).map(node => {
+    // find inbound edges
+    const contextsIn = state.filter(e => { 
+      return e.group == "edges" && e.data.target == node.data.id
+    }).map(getContextName)
+    // find outbound edges
+    const contextsOut = state.filter(e => { 
+      return e.group == "edges" && e.data.source == node.data.id
+    }).map(getContextName)
+
+    return {
+      name: node.data.id,
+      contexts: contextsIn,
+      templates: [node.data.USER_SAYS],
+      responses: [
+        {
+          speech: node.data.RESPONSE,
+          affectedContexts: contextsOut
+        }
+      ]
+    }
+  })
+}
+
+const sendCreateIntentRequest = (intentsData) => {
+  intentsData.map(data => {
+    $.ajax({
+        url: "https://api.api.ai/v1/intents?v=20160416",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", "Bearer key");
+        },
+        type: "POST",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        complete: function(e) { console.log(e)}
+    });
+  })
 }
 
 const cyElements = (state, action) => {
@@ -44,31 +90,11 @@ const cyElements = (state, action) => {
       console.log("save intent properties");
       return state.map(t => modifyElement(unselectElement(t), action.nodeId, action.userSays, action.response))
 
-    // TODO: gaigai
-    // modify intent info
+    // create intent 
     case 'SEND_CREATE_INTENT_REQUEST':
       console.log("send create intent request");
+      sendCreateIntentRequest(buildIntentsDataFromCyElements(state))
       return state
-//   sendCreateCyIntentRequest: function() {
-//     this.state.cy.nodes().map(function(node) {
-//         console.log("submit " + node.data("USER_SAYS"));
-//         // var data = {};
-//         // data['name'] = node.id();
-//         // data['templates'] = [node.data("USER_SAYS")];
-//         // data['responses'] = [{'speech': node.data("RESPONSE")}];
-
-//         // $.ajax({
-//         //     url: "https://api.api.ai/v1/intents?v=20160403",
-//         //     beforeSend: function (request) {
-//         //         request.setRequestHeader("Authorization", "Bearer key");
-//         //     },
-//         //     type: "POST",
-//         //     data: JSON.stringify(data),
-//         //     contentType: "application/json",
-//         //     complete: function(e) { console.log(e)}
-//         // });
-//     });
-//   },
 
     default:
       return state
