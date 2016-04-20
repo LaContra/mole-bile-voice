@@ -2,25 +2,25 @@ const DefaultVisualStyle = [
   {
     selector: 'node',
     css: {
-      'label': 'data(USER_SAYS)',
       'text-valign': 'center',
       'text-halign': 'center',
       'color': 'white',
       'text-outline-width': 2,
       'text-outline-color': '#888',
-      'shape': 'rectangle',
     }
   }, 
   {
-    selector: '$node > node',
+    selector: 'node.user_says',
     css: {
-      'padding-top': '10px',
-      'padding-left': '10px',
-      'padding-bottom': '10px',
-      'padding-right': '10px',
-      'text-valign': 'top',
-      'text-halign': 'center',
-      'background-color': '#bbb'
+      'label': 'data(user_says)',
+      'shape': 'ellipse',
+    }
+  }, 
+  {
+    selector: 'node.response',
+    css: {
+      'label': 'data(response)',
+      'shape': 'rectangle',
     }
   }, 
   {
@@ -29,6 +29,22 @@ const DefaultVisualStyle = [
       'target-arrow-shape': 'triangle',
     }
   }, 
+  {
+    selector: 'edge.us2r',
+    css: {
+      'color': '#555',
+      'line-color': '#555',
+      'target-arrow-color': '#555',
+    }
+  },
+  {
+    selector: 'edge.r2us',
+    css: {
+      'color': '#ccc',
+      'line-color': '#ccc',
+      'target-arrow-color': '#ccc',
+    }
+  },
   {
     selector: ':selected',
     css: {
