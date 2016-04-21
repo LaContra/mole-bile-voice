@@ -53,7 +53,7 @@ export const updateIntentLabel = (value) => {
   }
 }
 
-export const showHideUserSaysProperty = (targetNode) => {
+export const showHideIntentProperties = (targetNode) => {
   return {
     type: "SHOW_HIDE_INTENT_PROPERTY",
     targetNode

@@ -7,6 +7,8 @@ const DefaultVisualStyle = [
       'color': 'white',
       'text-outline-width': 2,
       'text-outline-color': '#888',
+      'text-wrap': 'wrap',
+      'text-max-width': '1000px',
     }
   }, 
   {

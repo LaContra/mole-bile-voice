@@ -1,10 +1,11 @@
-const userSaysPropertyPanel = (state = {hideProperty: true, userSays: '', response: '', selectedNode: -1}, action) => {
+const userSaysPropertyPanel = (state = {hideProperty: true, userSays: '', selectedNode: -1}, action) => {
   switch(action.type) {
     case 'SHOW_HIDE_INTENT_PROPERTY':
       if (action.targetNode !== null) {
-        return { hideProperty: false, 
+        return { 
+          hideProperty: false, 
           userSays: action.targetNode.data.user_says,
-          selectedNode: action.targetNode.data.id
+          selectedNode: parseInt(action.targetNode.data.id)
         }
       }
       return Object.assign({}, state, {hideProperty: true})

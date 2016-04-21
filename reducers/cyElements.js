@@ -6,7 +6,7 @@ const unselectElement = (element) => {
 }
 
 const modifyElement = (element, targetId, data) => {
-  if (element.data.id !== targetId) {
+  if (element.data.id != targetId) {
     return element
   }
   return Object.assign({}, element, { data: Object.assign({}, data, { id: targetId })} )
