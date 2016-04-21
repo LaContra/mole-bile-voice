@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
-import { saveUserSaysProperties, changeUserSaysField, chnageResponseField, showHideIntentProperties } from '../actions'
+import { saveUserSaysProperties, changeUserSaysField, showHideIntentProperties } from '../actions'
 import UserSaysProperty from '../components/UserSaysProperty'
 
 const mapStateToProps = (state) => { 
   return {
-    userSaysPropertyPanel: state.userSaysPropertyPanel
+    panel: state.intentPropertiesPanel.userSays
   } 
 }
 
@@ -17,9 +17,6 @@ const mapDispatchToProps = (dispatch) => {
     onUserSaysChange: (value) => {
       dispatch(changeUserSaysField(value))
     },
-    onResponseChange: (value) => {
-      dispatch(chnageResponseField(value))
-    }
   }
 }
 

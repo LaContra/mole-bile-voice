@@ -32,6 +32,14 @@ export const saveUserSaysProperties = (nodeId, userSays) => {
   }
 }
 
+export const saveResponseProperties = (nodeId, response) => {
+  return {
+    type: "SAVE_RESPONSE_PROPERTIES",
+    nodeId,
+    response
+  }
+}
+
 export const changeUserSaysField = (value) => {
   return {
     type: "CHANGE_USER_SAYS_FIELD",
@@ -53,10 +61,11 @@ export const updateIntentLabel = (value) => {
   }
 }
 
-export const showHideIntentProperties = (targetNode) => {
+export const showHideIntentProperties = (targetNode, nodeType) => {
   return {
     type: "SHOW_HIDE_INTENT_PROPERTY",
-    targetNode
+    targetNode,
+    nodeType
   }
 }
 

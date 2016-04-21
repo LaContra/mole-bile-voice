@@ -65,7 +65,7 @@ const Cy = React.createClass({
     this.cy.on('position', this.saveToLocalStorage);
 
     // show or hide intent info editor
-    this.cy.on('select, unselect', 'node, edge', this.showHideIntentProperties);
+    this.cy.on('select, unselect', 'node', this.showHideIntentProperties);
 
     // TODO
     // delete intent or edge
@@ -117,12 +117,13 @@ const Cy = React.createClass({
   },
 
   showHideIntentProperties: function() {
-    const selectedUserSays = this.cy.$("node.user_says:selected");
-    let targetNode = null;
+    const selectedUserSays = this.cy.$("node:selected");
+    let targetNode = null, type = null;
     if (selectedUserSays.length == 1) {
       targetNode = selectedUserSays[0].json();
+      type = selectedUserSays[0].hasClass("user_says")? "userSays": "response"
     }
-    this.props.showHideIntentProperties(targetNode);
+    this.props.showHideIntentProperties(targetNode, type);
   },
 
   saveToLocalStorage: function() {
@@ -147,8 +148,8 @@ const mapDispatchToProps = (dispatch) => {
     addEdge: (source, target) => {
       dispatch(addEdge(source, target));
     },
-    showHideIntentProperties: (targetNode) => {
-      dispatch(showHideIntentProperties(targetNode));
+    showHideIntentProperties: (targetNode, nodeType) => {
+      dispatch(showHideIntentProperties(targetNode, nodeType));
     }
   }
 }

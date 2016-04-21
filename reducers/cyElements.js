@@ -128,9 +128,13 @@ const cyElements = (state, action) => {
       }]
     
     case "SAVE_USER_SAYS_PROPERTIES":
-      console.log("save intent properties");
       return state.map(t => modifyElement(unselectElement(t), action.nodeId, {
         user_says: action.userSays
+      }))
+
+    case "SAVE_RESPONSE_PROPERTIES":
+      return state.map(t => modifyElement(unselectElement(t), action.nodeId, {
+        response: action.response
       }))
 
     // create intent 

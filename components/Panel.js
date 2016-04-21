@@ -2,6 +2,7 @@ import React from 'react'
 import IntentControl from '../containers/IntentControl'
 import IntentNameDisplay from '../containers/IntentNameDisplay'
 import UserSaysPropertyControl from '../containers/UserSaysPropertyControl'
+import ResponsePropertyControl from '../containers/ResponsePropertyControl'
 import IntentRequest from '../containers/IntentRequest'
 
 const Panel = () => (
@@ -9,6 +10,7 @@ const Panel = () => (
     <IntentControl />
     <IntentNameDisplay />
     <UserSaysPropertyControl />
+    <ResponsePropertyControl />
     <IntentRequest />
   </div>
 )
