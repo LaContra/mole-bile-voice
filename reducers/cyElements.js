@@ -108,6 +108,7 @@ const cyElements = (state, action) => {
           group: "edges",
           data: {source: action.id-3, target: action.id-2, id: action.id-1},
           classes: "us2r",
+          selectable: false,
         }
       ]
       // TODO: position
@@ -120,9 +121,10 @@ const cyElements = (state, action) => {
         return state.map(t => unselectElement(t))
       }
       return [ ...state.map(t => unselectElement(t)), {
-          group: "edges",
-          data: {source: action.source, target: action.target, id: action.id},
-          classes: "r2us",
+        group: "edges",
+        data: {source: action.source, target: action.target, id: action.id},
+        classes: "r2us",
+        selectable: false,
       }]
     
     case "SAVE_INTENT_PROPERTIES":
