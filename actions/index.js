@@ -24,12 +24,11 @@ export const addEdge = (source, target) => {
   }
 }
 
-export const saveIntentProperties = (nodeId, userSays, response) => {
+export const saveUserSaysProperties = (nodeId, userSays) => {
   return {
-    type: "SAVE_INTENT_PROPERTIES",
+    type: "SAVE_USER_SAYS_PROPERTIES",
     nodeId,
-    userSays, 
-    response
+    userSays
   }
 }
 
@@ -54,7 +53,7 @@ export const updateIntentLabel = (value) => {
   }
 }
 
-export const showHideIntentProperty = (targetNode) => {
+export const showHideUserSaysProperty = (targetNode) => {
   return {
     type: "SHOW_HIDE_INTENT_PROPERTY",
     targetNode

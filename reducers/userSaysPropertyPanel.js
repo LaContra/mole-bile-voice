@@ -1,10 +1,9 @@
-const intentPropertyPanel = (state = {hideProperty: true, userSays: '', response: '', selectedNode: -1}, action) => {
+const userSaysPropertyPanel = (state = {hideProperty: true, userSays: '', response: '', selectedNode: -1}, action) => {
   switch(action.type) {
     case 'SHOW_HIDE_INTENT_PROPERTY':
       if (action.targetNode !== null) {
         return { hideProperty: false, 
-          userSays: action.targetNode.data.USER_SAYS,
-          response: action.targetNode.data.RESPONSE,
+          userSays: action.targetNode.data.user_says,
           selectedNode: action.targetNode.data.id
         }
       }
@@ -18,4 +17,4 @@ const intentPropertyPanel = (state = {hideProperty: true, userSays: '', response
   }
 }
 
-export default intentPropertyPanel
+export default userSaysPropertyPanel

@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../utils/LocalStorage'
-import { addEdge, showHideIntentProperty } from '../actions'
+import { addEdge, showHideUserSaysProperty } from '../actions'
 import cytoscape from 'cytoscape'
 
 
@@ -47,7 +47,7 @@ const Cy = React.createClass({
     console.log("created cy");
 
     this.setEventListner();
-    this.showHideIntentProperty();
+    this.showHideUserSaysProperty();
   },
 
   setEventListner: function() {
@@ -65,7 +65,7 @@ const Cy = React.createClass({
     this.cy.on('position', this.saveToLocalStorage);
 
     // show or hide intent info editor
-    this.cy.on('select, unselect', 'node, edge', this.showHideIntentProperty);
+    this.cy.on('select, unselect', 'node, edge', this.showHideUserSaysProperty);
 
     // TODO
     // delete intent or edge
@@ -116,14 +116,13 @@ const Cy = React.createClass({
     this._edgeTo = null;
   },
 
-  showHideIntentProperty: function() {
-    const selectedEdges = this.cy.$("edge:selected");
-    const selectedNodes = this.cy.$("node:selected");
+  showHideUserSaysProperty: function() {
+    const selectedUserSays = this.cy.$("node.user_says:selected");
     let targetNode = null;
-    if (selectedEdges.length == 0 && selectedNodes !== undefined && selectedNodes.length == 1) {
-      targetNode = selectedNodes[0].json();
+    if (selectedUserSays.length == 1) {
+      targetNode = selectedUserSays[0].json();
     }
-    this.props.showHideIntentProperty(targetNode);
+    this.props.showHideUserSaysProperty(targetNode);
   },
 
   saveToLocalStorage: function() {
@@ -148,8 +147,8 @@ const mapDispatchToProps = (dispatch) => {
     addEdge: (source, target) => {
       dispatch(addEdge(source, target));
     },
-    showHideIntentProperty: (targetNode) => {
-      dispatch(showHideIntentProperty(targetNode));
+    showHideUserSaysProperty: (targetNode) => {
+      dispatch(showHideUserSaysProperty(targetNode));
     }
   }
 }

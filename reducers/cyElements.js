@@ -5,11 +5,11 @@ const unselectElement = (element) => {
   return Object.assign({}, element, {selected: false})
 }
 
-const modifyElement = (element, targetId, userSays, response) => {
+const modifyElement = (element, targetId, data) => {
   if (element.data.id !== targetId) {
     return element
   }
-  return Object.assign({}, element, {data: {USER_SAYS: userSays, RESPONSE: response, id: targetId}})
+  return Object.assign({}, element, { data: Object.assign({}, data, { id: targetId })} )
 }
 
 const filterNode = (element) => {
@@ -127,9 +127,11 @@ const cyElements = (state, action) => {
         selectable: false,
       }]
     
-    case "SAVE_INTENT_PROPERTIES":
+    case "SAVE_USER_SAYS_PROPERTIES":
       console.log("save intent properties");
-      return state.map(t => modifyElement(unselectElement(t), action.nodeId, action.userSays, action.response))
+      return state.map(t => modifyElement(unselectElement(t), action.nodeId, {
+        user_says: action.userSays
+      }))
 
     // create intent 
     case 'SEND_CREATE_INTENT_REQUEST':

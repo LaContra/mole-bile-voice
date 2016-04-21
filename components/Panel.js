@@ -1,14 +1,14 @@
 import React from 'react'
 import IntentControl from '../containers/IntentControl'
 import IntentNameDisplay from '../containers/IntentNameDisplay'
-import IntentPropertyControl from '../containers/IntentPropertyControl'
+import UserSaysPropertyControl from '../containers/UserSaysPropertyControl'
 import IntentRequest from '../containers/IntentRequest'
 
 const Panel = () => (
   <div id="panel">
     <IntentControl />
     <IntentNameDisplay />
-    <IntentPropertyControl />
+    <UserSaysPropertyControl />
     <IntentRequest />
   </div>
 )
