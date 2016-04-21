@@ -5,7 +5,7 @@ import IntentPropertyControl from '../containers/IntentPropertyControl'
 import IntentRequest from '../containers/IntentRequest'
 
 const Panel = () => (
-  <div id="panel">
+  <div className="base_panel">
     <IntentControl />
     <IntentNameDisplay />
     <IntentPropertyControl />
