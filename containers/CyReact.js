@@ -56,10 +56,10 @@ const Cy = React.createClass({
     this._edgeTo = null;
 
     /* Edge control */
-    this.cy.on('cxtdrag', 'node', this.dragNode);
-    this.cy.on('cxtdragover', 'node', this.dragOverNode);
-    this.cy.on('cxtdragout', 'node', this.dragOutNode);
-    this.cy.on('cxttapend', 'node', this.tapEndNode);
+    this.cy.on('cxtdrag', 'node.response', this.dragNode);
+    this.cy.on('cxtdragover', 'node.user_says', this.dragOverNode);
+    this.cy.on('cxtdragout', 'node.user_says', this.dragOutNode);
+    this.cy.on('cxttapend', 'node.response', this.tapEndNode);
 
     // save elements to local storage
     this.cy.on('position', this.saveToLocalStorage);

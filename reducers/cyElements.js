@@ -24,15 +24,21 @@ const getContextNameFromEdge = (edge) => {
   return edge.data.source + "_to_" + edge.data.target
 }
 
-const getEdgesIn = (node, state) => {
-  return state.filter(filterEdge).filter(e => { 
+const getEdgesIn = (node, elements) => {
+  return elements.filter(filterEdge).filter(e => { 
       return e.data.target == node.data.id
   })
 }
 
-const getEdgesOut = (node, state) => {
-  return state.filter(filterEdge).filter(e => { 
+const getEdgesOut = (node, elements) => {
+  return elements.filter(filterEdge).filter(e => { 
       return e.data.source == node.data.id
+  })
+}
+
+const getEdgesBetween = (nodeFromId, nodeToId, elements) => {
+  return elements.filter(filterEdge).filter(edge => {
+    return edge.data.source == nodeFromId && edge.data.target == nodeToId
   })
 }
 
@@ -109,9 +115,14 @@ const cyElements = (state, action) => {
 
     case 'ADD_EDGE':
       console.log("add edge");
+      // FIXME: temporarily avoid cycle in one intent
+      if (getEdgesBetween(action.target, action.source, state).length > 0) {
+        return state.map(t => unselectElement(t))
+      }
       return [ ...state.map(t => unselectElement(t)), {
           group: "edges",
           data: {source: action.source, target: action.target, id: action.id},
+          classes: "r2us",
       }]
     
     case "SAVE_INTENT_PROPERTIES":
