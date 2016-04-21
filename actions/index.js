@@ -11,7 +11,7 @@ export const clearIntents = () => {
 export const addIntent = () => {
   return {
     type: "ADD_INTENT",
-    id: intentId++
+    id: intentId+=3
   }
 }
 
