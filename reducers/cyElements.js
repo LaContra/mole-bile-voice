@@ -88,9 +88,22 @@ const cyElements = (state, action) => {
     case 'ADD_INTENT':
       return [ ...state.map(t => unselectElement(t)), {
           group: "nodes",
-          data: { USER_SAYS: "", RESPONSE: "", id: action.id },
+          data: { user_says: "", id: action.id-3 },
+          classes: "user_says",
           position: {x: 100, y: 100},
-      }]
+        },
+        {
+          group: "nodes",
+          data: { response: "", id: action.id-2 },
+          classes: "response",
+          position: {x: 140, y: 100},
+        },
+        {
+          group: "edges",
+          data: {source: action.id-3, target: action.id-2, id: action.id-1},
+          classes: "us2r",
+        }
+      ]
       // TODO: position
       // position: { x: -this.state.cy.viewport().pan().x / this.state.cy.zoom() + 40, y: -this.state.cy.viewport().pan().y / this.state.cy.zoom() + 40 }
 

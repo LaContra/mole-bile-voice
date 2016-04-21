@@ -13,7 +13,7 @@ const DefaultVisualStyle = [
     selector: 'node.user_says',
     css: {
       'label': 'data(user_says)',
-      'shape': 'ellipse',
+      'shape': 'triangle',
     }
   }, 
   {
