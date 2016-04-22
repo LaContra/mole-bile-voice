@@ -75,7 +75,6 @@ export const addEntity = () => {
   }
 }
 
-// TODO
 export const changeEntityName = (entityId, entityName) => {
   return {
     type: "CHANGE_ENTITY_NAME",
@@ -84,7 +83,6 @@ export const changeEntityName = (entityId, entityName) => {
   }
 }
 
-// TODO
 export const saveEntities = () => {
   return {
     type: "SAVE_ENTITIES"

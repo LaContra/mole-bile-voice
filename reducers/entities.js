@@ -1,3 +1,5 @@
+import LocalStorage from '../utils/LocalStorage'
+
 const changeEntityName = (entities, entityId, entityName) => {
   return entities.map((entity, index) => {
     if (index == entityId) {
@@ -44,11 +46,20 @@ const changeSynonyms = (entities, entityId, refId, synonyms) => {
   })
 }
 
+const removeEmptyValues = (entities) => {
+  return entities.map(entity => {
+    return Object.assign({}, entity, {referenceDefinitions: entity.referenceDefinitions.filter(ref => {
+      return ref.referenceValue != "" && ref.synonyms != ""
+    })})
+  }).filter(entity => {
+    return entity.entityName != "" && entity.referenceDefinitions != null && entity.referenceDefinitions.length > 0
+  })
+}
+
 const entities = (state, action) => {
   if (typeof state === 'undefined') {
-    // const entities = LocalStorage.getElements("entities");
-    // return entities == null? []: entities
-    return []
+    const entities = LocalStorage.getElements("entities");
+    return entities == null? []: entities
   }
 
   switch(action.type) {
@@ -62,9 +73,10 @@ const entities = (state, action) => {
       }]
     case "CHANGE_ENTITY_NAME":
       return changeEntityName(state, action.entityId, action.entityName)
-    // TODO
     case "SAVE_ENTITIES":
-      return state
+      const newEntities = removeEmptyValues(state)
+      LocalStorage.saveEntities(newEntities)
+      return newEntities
     case "ADD_REFERENCE_DEFINITION":
       return addReferenceDefinition(state, action.entityId, {
         referenceValue: '',
