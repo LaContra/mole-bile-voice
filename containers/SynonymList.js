@@ -1,10 +1,17 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { changeSynonyms } from '../actions'
 
-const SynonymList = ({ synonyms, hidden }) => (
+let SynonymList = ({ entityId, refId, synonyms, dispatch }) => (
   <div>
-    <div>{synonyms}</div>
-    <input hidden={hidden} type="text" placeholder="synonym list"/>
+    <input 
+      type="text" 
+      placeholder="synonym list"
+      value={synonyms}
+      onChange={e => dispatch(changeSynonyms(entityId, refId, e.target.value))}/>
   </div>
 )
+
+SynonymList = connect()(SynonymList)
 
 export default SynonymList

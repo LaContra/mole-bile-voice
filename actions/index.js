@@ -97,3 +97,21 @@ export const addReferenceDefinition = (entityId) => {
     entityId
   }
 }
+
+export const changeReferenceValue = (entityId, refId, refValue) => {
+  return {
+    type: "CHANGE_REFERENCE_VALUE",
+    entityId,
+    refId,
+    refValue
+  }
+}
+
+export const changeSynonyms = (entityId, refId, synonyms) => {
+  return {
+    type: "CHANGE_SYNONYMS",
+    entityId,
+    refId,
+    synonyms
+  }
+}

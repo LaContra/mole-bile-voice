@@ -8,7 +8,7 @@ import ReferenceDefinitionList from '../components/ReferenceDefinitionList'
 let Entity = ({ entityId, entity, dispatch }) => (
   <div>
     <EntityName entityId={entityId} entityName={entity.entityName}/>
-    <ReferenceDefinitionList referenceDefinitions={entity.referenceDefinitions}/>
+    <ReferenceDefinitionList entityId={entityId} referenceDefinitions={entity.referenceDefinitions}/>
     <button className="btn btn-default"
       onClick={() => dispatch(addReferenceDefinition(entityId))}>Add Ref
     </button>

@@ -1,11 +1,13 @@
 import React from 'react'
 import ReferenceDefinition from './ReferenceDefinition'
 
-const ReferenceDefinitionList = ({ referenceDefinitions }) => (
+const ReferenceDefinitionList = ({ entityId, referenceDefinitions }) => (
   <div>
     {referenceDefinitions.map((referenceDefinition, index) => 
       <ReferenceDefinition key={index}
-        value={referenceDefinition.value} 
+        entityId={entityId}
+        refId={index}
+        referenceValue={referenceDefinition.referenceValue} 
         synonyms={referenceDefinition.synonyms}/>
     )}
   </div>
