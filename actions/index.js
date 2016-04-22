@@ -54,13 +54,6 @@ export const chnageResponseField = (value) => {
   }
 }
 
-export const updateIntentLabel = (value) => {
-  return {
-    type: "UPDATE_INTENT_LABEL",
-    value
-  }
-}
-
 export const showHideIntentProperties = (targetNode, nodeType) => {
   return {
     type: "SHOW_HIDE_INTENT_PROPERTY",
