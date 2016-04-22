@@ -2,7 +2,7 @@ import React from 'react'
 import ReferenceValue from '../containers/ReferenceValue'
 import SynonymList from '../containers/SynonymList'
 
-const ReferenceDefinition = ({ entityId, refId, referenceValue, synonyms }) => (
+const ReferenceEntry = ({ entityId, refId, referenceValue, synonyms }) => (
   <div>
     <ReferenceValue referenceValue={referenceValue}
       entityId={entityId}
@@ -13,4 +13,4 @@ const ReferenceDefinition = ({ entityId, refId, referenceValue, synonyms }) => (
   </div>
 )
 
-export default ReferenceDefinition
+export default ReferenceEntry

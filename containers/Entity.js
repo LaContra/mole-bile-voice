@@ -1,16 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addReferenceDefinition } from '../actions'
+import { addReferenceEntry } from '../actions'
 import EntityName from './EntityName'
-import ReferenceDefinitionList from '../components/ReferenceDefinitionList'
+import ReferenceEntryList from '../components/ReferenceEntryList'
 
 
 let Entity = ({ entityId, entity, dispatch }) => (
   <div>
-    <EntityName entityId={entityId} entityName={entity.entityName}/>
-    <ReferenceDefinitionList entityId={entityId} referenceDefinitions={entity.referenceDefinitions}/>
+    <EntityName entityId={entityId} name={entity.name}/>
+    <ReferenceEntryList entityId={entityId} entries={entity.entries}/>
     <button className="btn btn-default"
-      onClick={() => dispatch(addReferenceDefinition(entityId))}>Add Ref
+      onClick={() => dispatch(addReferenceEntry(entityId))}>Add Ref
     </button>
   </div>
 )

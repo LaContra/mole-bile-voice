@@ -74,11 +74,11 @@ export const addEntity = () => {
   }
 }
 
-export const changeEntityName = (entityId, entityName) => {
+export const changeEntityName = (entityId, name) => {
   return {
     type: "CHANGE_ENTITY_NAME",
     entityId,
-    entityName
+    name
   }
 }
 
@@ -88,9 +88,9 @@ export const saveEntities = () => {
   }
 }
 
-export const addReferenceDefinition = (entityId) => {
+export const addReferenceEntry = (entityId) => {
   return {
-    type: "ADD_REFERENCE_DEFINITION",
+    type: "ADD_REFERENCE_ENTRY",
     entityId
   }
 }

@@ -2,11 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { changeEntityName } from '../actions'
 
-let EntityName = ({ entityId, entityName, dispatch }) => (
+let EntityName = ({ entityId, name, dispatch }) => (
   <div>
     <input type="text" 
       placeholder="entity name"
-      value={entityName}
+      value={name}
       onChange={e => dispatch(changeEntityName(entityId, e.target.value))}/>
   </div>
 )

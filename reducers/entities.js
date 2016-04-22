@@ -1,18 +1,19 @@
+import $ from 'jquery'
 import LocalStorage from '../utils/LocalStorage'
 
-const changeEntityName = (entities, entityId, entityName) => {
+const changeEntityName = (entities, entityId, name) => {
   return entities.map((entity, index) => {
     if (index == entityId) {
-      return Object.assign({}, entity, {entityName: entityName});
+      return Object.assign({}, entity, {name: name});
     }
     return entity
   })
 }
 
-const addReferenceDefinition = (entities, entityId, ref) => {
+const addReferenceEntry = (entities, entityId, ref) => {
   return entities.map((entity, index) => {
     if (index == entityId) {
-      return Object.assign({}, entity, {referenceDefinitions: [...entity.referenceDefinitions, ref]}) 
+      return Object.assign({}, entity, {entries: [...entity.entries, ref]}) 
     }
     return entity
   })
@@ -21,9 +22,9 @@ const addReferenceDefinition = (entities, entityId, ref) => {
 const changeReferenceValue = (entities, entityId, refId, refValue) => {
   return entities.map((entity, index) => {
     if (index == entityId) {
-      return Object.assign({}, entity, {referenceDefinitions: entity.referenceDefinitions.map((ref, ref_index) => {
+      return Object.assign({}, entity, {entries: entity.entries.map((ref, ref_index) => {
         if (ref_index == refId) {
-          return Object.assign({}, ref, {referenceValue: refValue})
+          return Object.assign({}, ref, {value: refValue})
         }
         return ref
       })})
@@ -35,9 +36,9 @@ const changeReferenceValue = (entities, entityId, refId, refValue) => {
 const changeSynonyms = (entities, entityId, refId, synonyms) => {
   return entities.map((entity, index) => {
     if (index == entityId) {
-      return Object.assign({}, entity, {referenceDefinitions: entity.referenceDefinitions.map((ref, ref_index) => {
+      return Object.assign({}, entity, {entries: entity.entries.map((ref, ref_index) => {
         if (ref_index == refId) {
-          return Object.assign({}, ref, {synonyms: synonyms})
+          return Object.assign({}, ref, {synonyms: synonyms.split(";")})
         }
         return ref
       })})
@@ -48,11 +49,24 @@ const changeSynonyms = (entities, entityId, refId, synonyms) => {
 
 const removeEmptyValues = (entities) => {
   return entities.map(entity => {
-    return Object.assign({}, entity, {referenceDefinitions: entity.referenceDefinitions.filter(ref => {
-      return ref.referenceValue != "" && ref.synonyms != ""
+    return Object.assign({}, entity, {entries: entity.entries.filter(ref => {
+      return ref.value != "" && ref.synonyms != null && ref.synonyms.length > 0
     })})
   }).filter(entity => {
-    return entity.entityName != "" && entity.referenceDefinitions != null && entity.referenceDefinitions.length > 0
+    return entity.name != "" && entity.entries != null && entity.entries.length > 0
+  })
+}
+
+const sendCreateEntitiesRequest = (entities) => {
+  $.ajax({
+      url: "https://api.api.ai/v1/entities?v=20160422",
+      beforeSend: function (request) {
+          request.setRequestHeader("Authorization", "Bearer key");
+      },
+      type: "POST",
+      data: JSON.stringify(entities),
+      contentType: "application/json",
+      complete: function(e) { console.log(e)}
   })
 }
 
@@ -65,21 +79,22 @@ const entities = (state, action) => {
   switch(action.type) {
     case "ADD_ENTITY":
       return [...state, {
-        entityName: '', 
-        referenceDefinitions: [{
-          referenceValue: '',
-          synonyms: ''
+        name: '', 
+        entries: [{
+          value: '',
+          synonyms: []
         }]
       }]
     case "CHANGE_ENTITY_NAME":
-      return changeEntityName(state, action.entityId, action.entityName)
+      return changeEntityName(state, action.entityId, action.name)
     case "SAVE_ENTITIES":
       const newEntities = removeEmptyValues(state)
       LocalStorage.saveEntities(newEntities)
+      sendCreateEntitiesRequest(newEntities)
       return newEntities
-    case "ADD_REFERENCE_DEFINITION":
-      return addReferenceDefinition(state, action.entityId, {
-        referenceValue: '',
+    case "ADD_REFERENCE_ENTRY":
+      return addReferenceEntry(state, action.entityId, {
+        value: '',
         synonyms: ''
       })
     case "CHANGE_REFERENCE_VALUE":

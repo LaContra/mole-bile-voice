@@ -7,7 +7,7 @@ let SynonymList = ({ entityId, refId, synonyms, dispatch }) => (
     <input 
       type="text" 
       placeholder="synonym list"
-      value={synonyms}
+      value={synonyms.join(";")}
       onChange={e => dispatch(changeSynonyms(entityId, refId, e.target.value))}/>
   </div>
 )
