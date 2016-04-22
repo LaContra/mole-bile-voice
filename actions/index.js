@@ -1,6 +1,6 @@
 import LocalStorage from '../utils/LocalStorage'
 
-let intentId = LocalStorage.getElements("elementId");
+let intentId = parseInt(LocalStorage.getElements("elementId"));
 
 export const clearIntents = () => {
   return {
@@ -11,7 +11,7 @@ export const clearIntents = () => {
 export const addIntent = () => {
   return {
     type: "ADD_INTENT",
-    id: intentId++
+    id: intentId+=3
   }
 }
 
@@ -24,11 +24,18 @@ export const addEdge = (source, target) => {
   }
 }
 
-export const saveIntentProperties = (nodeId, userSays, response) => {
+export const saveUserSaysProperties = (nodeId, userSays) => {
   return {
-    type: "SAVE_INTENT_PROPERTIES",
+    type: "SAVE_USER_SAYS_PROPERTIES",
     nodeId,
-    userSays, 
+    userSays
+  }
+}
+
+export const saveResponseProperties = (nodeId, response) => {
+  return {
+    type: "SAVE_RESPONSE_PROPERTIES",
+    nodeId,
     response
   }
 }
@@ -47,17 +54,11 @@ export const chnageResponseField = (value) => {
   }
 }
 
-export const updateIntentLabel = (value) => {
-  return {
-    type: "UPDATE_INTENT_LABEL",
-    value
-  }
-}
-
-export const showHideIntentProperty = (targetNode) => {
+export const showHideIntentProperties = (targetNode, nodeType) => {
   return {
     type: "SHOW_HIDE_INTENT_PROPERTY",
-    targetNode
+    targetNode,
+    nodeType
   }
 }
 

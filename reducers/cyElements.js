@@ -5,11 +5,11 @@ const unselectElement = (element) => {
   return Object.assign({}, element, {selected: false})
 }
 
-const modifyElement = (element, targetId, userSays, response) => {
-  if (element.data.id !== targetId) {
+const modifyElement = (element, targetId, data) => {
+  if (element.data.id != targetId) {
     return element
   }
-  return Object.assign({}, element, {data: {USER_SAYS: userSays, RESPONSE: response, id: targetId}})
+  return Object.assign({}, element, { data: Object.assign({}, data, { id: targetId })} )
 }
 
 const filterNode = (element) => {
@@ -20,43 +20,90 @@ const filterEdge = (element) => {
   return element.group == "edges"
 }
 
-const getContextNameFromEdge = (edge) => {
-  return edge.data.source + "_to_" + edge.data.target
+const filterNodeUserSays = (element) => {
+  return filterNode(element) && element.classes == "user_says"
 }
 
-const getEdgesIn = (node, state) => {
-  return state.filter(filterEdge).filter(e => { 
-      return e.data.target == node.data.id
+const filterNodeResponse = (element) => {
+  return filterNode(element) && element.classes == "response"
+}
+
+const filterEdgeOut = (edge, node) => {
+  return edge.data.source == node.data.id
+}
+
+const filterEdgeIn = (edge, node) => {
+  return edge.data.target == node.data.id
+}
+
+const getTargetId = (edge, elements) => {
+  return edge.data.target
+}
+
+const getSourceId = (edge, elements) => {
+  return edge.data.source
+}
+
+const getEdgesBetween = (nodeFromId, nodeToId, elements) => {
+  return elements.filter(filterEdge).filter(edge => {
+    return edge.data.source == nodeFromId && edge.data.target == nodeToId
   })
 }
 
-const getEdgesOut = (node, state) => {
-  return state.filter(filterEdge).filter(e => { 
-      return e.data.source == node.data.id
-  })
-}
-
-const buildIntentsDataFromCyElements = (state) => {
-  // for every nodes
-  return state.filter(filterNode).map(node => {
-    const contextsIn = getEdgesIn(node, state).map(getContextNameFromEdge)
-    const contextsOut = getEdgesOut(node, state).map(getContextNameFromEdge)
-
-    console.log(contextsIn)
-    console.log(contextsOut)
+const getIntents = (elements) => {
+  return elements.filter(filterNodeUserSays).map(userSaysNode => {
+    const responseNodeId = elements.filter(e => filterEdgeOut(e, userSaysNode)).map(getTargetId)[0]
+    const responseNode = elements.filter(e => e.data.id == responseNodeId)[0]
 
     return {
-      name: node.data.id,
-      contexts: contextsIn,
-      templates: [node.data.USER_SAYS],
-      responses: [
-        {
-          speech: node.data.RESPONSE,
-          affectedContexts: contextsOut
-        }
-      ]
+      userSaysNode: userSaysNode,
+      responseNode: responseNode,
     }
   })
+}
+
+const assignInOutEdges = (intent, elements) => {
+  return Object.assign({}, intent, {
+    edgesIn: elements.filter(e => filterEdgeIn(e, intent.userSaysNode)),
+    edgesOut: elements.filter(e => filterEdgeOut(e, intent.responseNode))
+  })
+}
+
+const getContextNameFromEdge = (edge, elements) => {
+  const source = elements.filter(e => e.data.id == edge.data.source)[0].data.response.split("\n")[0]
+  const target = elements.filter(e => e.data.id == edge.data.target)[0].data.user_says.split("\n")[0]
+  return `${source}_${target}`.replace(/ /g, '')
+}
+
+const assignContextName = (intent, elements) => {
+  return Object.assign({}, intent, {
+    contextsIn: intent.edgesIn.map(e => getContextNameFromEdge(e, elements)),
+    contextsOut: intent.edgesOut.map(e => getContextNameFromEdge(e, elements))
+  })
+}
+
+const buildApiData = (intent) => {
+  const userSayses = intent.userSaysNode.data.user_says.split("\n")
+  const responses = intent.responseNode.data.response.split("\n")
+
+  return {
+    name: `${intent.userSaysNode.data.id}: ${userSayses[0]}+${responses[0]}`,
+    contexts: intent.contextsIn,
+    templates: userSayses,
+    responses: [
+      {
+        speech: responses,
+        affectedContexts: intent.contextsOut
+      }
+    ]
+  }
+}
+
+const buildIntentsDataFromCyElements = (elements) => {
+  return getIntents(elements)
+    .map(i => assignInOutEdges(i, elements))
+    .map(i => assignContextName(i, elements))
+    .map(buildApiData)
 }
 
 const sendCreateIntentRequest = (intentData) => {
@@ -70,6 +117,7 @@ const sendCreateIntentRequest = (intentData) => {
       contentType: "application/json",
       complete: function(e) { console.log(e)}
   })
+  console.log(JSON.stringify(intentData))
 }
 
 const cyElements = (state, action) => {
@@ -88,22 +136,48 @@ const cyElements = (state, action) => {
     case 'ADD_INTENT':
       return [ ...state.map(t => unselectElement(t)), {
           group: "nodes",
-          data: { USER_SAYS: "", RESPONSE: "", id: action.id },
+          data: { user_says: "", id: action.id-3 },
+          classes: "user_says",
           position: {x: 100, y: 100},
-      }]
+        },
+        {
+          group: "nodes",
+          data: { response: "", id: action.id-2 },
+          classes: "response",
+          position: {x: 140, y: 100},
+        },
+        {
+          group: "edges",
+          data: {source: action.id-3, target: action.id-2, id: action.id-1},
+          classes: "us2r",
+          selectable: false,
+        }
+      ]
       // TODO: position
       // position: { x: -this.state.cy.viewport().pan().x / this.state.cy.zoom() + 40, y: -this.state.cy.viewport().pan().y / this.state.cy.zoom() + 40 }
 
     case 'ADD_EDGE':
       console.log("add edge");
+      // FIXME: temporarily avoid cycle in one intent
+      if (getEdgesBetween(action.target, action.source, state).length > 0) {
+        return state.map(t => unselectElement(t))
+      }
       return [ ...state.map(t => unselectElement(t)), {
-          group: "edges",
-          data: {source: action.source, target: action.target, id: action.id},
+        group: "edges",
+        data: {source: action.source, target: action.target, id: action.id},
+        classes: "r2us",
+        selectable: false,
       }]
     
-    case "SAVE_INTENT_PROPERTIES":
-      console.log("save intent properties");
-      return state.map(t => modifyElement(unselectElement(t), action.nodeId, action.userSays, action.response))
+    case "SAVE_USER_SAYS_PROPERTIES":
+      return state.map(t => modifyElement(unselectElement(t), action.nodeId, {
+        user_says: action.userSays
+      }))
+
+    case "SAVE_RESPONSE_PROPERTIES":
+      return state.map(t => modifyElement(unselectElement(t), action.nodeId, {
+        response: action.response
+      }))
 
     // create intent 
     case 'SEND_CREATE_INTENT_REQUEST':
