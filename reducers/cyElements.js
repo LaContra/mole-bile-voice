@@ -20,20 +20,34 @@ const filterEdge = (element) => {
   return element.group == "edges"
 }
 
-const getContextNameFromEdge = (edge) => {
-  return edge.data.source + "_to_" + edge.data.target
+const filterNodeUserSays = (element) => {
+  return filterNode(element) && element.classes == "user_says"
 }
 
-const getEdgesIn = (node, elements) => {
-  return elements.filter(filterEdge).filter(e => { 
-      return e.data.target == node.data.id
-  })
+const filterNodeResponse = (element) => {
+  return filterNode(element) && element.classes == "response"
 }
 
-const getEdgesOut = (node, elements) => {
-  return elements.filter(filterEdge).filter(e => { 
-      return e.data.source == node.data.id
-  })
+const getContextNameFromEdge = (edge, elements) => {
+  const source = elements.filter(e => e.data.id == edge.data.source)[0].data.response.split("\n")[0]
+  const target = elements.filter(e => e.data.id == edge.data.target)[0].data.user_says.split("\n")[0]
+  return `${source}_${target}`.replace(/ /g, '')
+}
+
+const filterEdgeOut = (edge, node) => {
+  return edge.data.source == node.data.id
+}
+
+const filterEdgeIn = (edge, node) => {
+  return edge.data.target == node.data.id
+}
+
+const getTargetId = (edge, elements) => {
+  return edge.data.target
+}
+
+const getSourceId = (edge, elements) => {
+  return edge.data.source
 }
 
 const getEdgesBetween = (nodeFromId, nodeToId, elements) => {
@@ -42,22 +56,26 @@ const getEdgesBetween = (nodeFromId, nodeToId, elements) => {
   })
 }
 
-const buildIntentsDataFromCyElements = (state) => {
-  // for every nodes
-  return state.filter(filterNode).map(node => {
-    const contextsIn = getEdgesIn(node, state).map(getContextNameFromEdge)
-    const contextsOut = getEdgesOut(node, state).map(getContextNameFromEdge)
+const buildIntentsDataFromCyElements = (elements) => {
+  return elements.filter(filterNodeUserSays).map(userSaysNode => {
+    // -in context-> userSaysNode -> responseNode -out context-> 
+    // responseNode: same intent (should be exact one)
+    const responseNodeId = elements.filter(e => filterEdgeOut(e, userSaysNode)).map(getTargetId)[0]
+    const responseNode = elements.filter(e => e.data.id == responseNodeId)[0]
 
-    console.log(contextsIn)
-    console.log(contextsOut)
+    const contextsIn = elements.filter(e => filterEdgeIn(e, userSaysNode)).map(e => getContextNameFromEdge(e, elements))
+    const contextsOut = elements.filter(e => filterEdgeOut(e, responseNode)).map(e => getContextNameFromEdge(e, elements))
+
+    const userSayses = userSaysNode.data.user_says.split("\n")
+    const responses = responseNode.data.response.split("\n")
 
     return {
-      name: node.data.id,
+      name: `${responseNode.data.id}: ${userSayses[0]}+${responses[0]}`,
       contexts: contextsIn,
-      templates: [node.data.USER_SAYS],
+      templates: userSayses,
       responses: [
         {
-          speech: node.data.RESPONSE,
+          speech: responses,
           affectedContexts: contextsOut
         }
       ]
@@ -76,6 +94,7 @@ const sendCreateIntentRequest = (intentData) => {
       contentType: "application/json",
       complete: function(e) { console.log(e)}
   })
+  console.log(JSON.stringify(intentData))
 }
 
 const cyElements = (state, action) => {

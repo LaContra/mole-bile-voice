@@ -1,6 +1,6 @@
 import LocalStorage from '../utils/LocalStorage'
 
-let intentId = LocalStorage.getElements("elementId");
+let intentId = parseInt(LocalStorage.getElements("elementId"));
 
 export const clearIntents = () => {
   return {
