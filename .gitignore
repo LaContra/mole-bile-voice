@@ -1,3 +1,4 @@
-
+*.sublime-project
+*.sublime-workspace
 draw2d-lib-zip/
 node_modules
