@@ -1,7 +1,7 @@
 import React from 'react'
 import Panel from './Panel'
 import CyReact from '../containers/CyReact'
-import EntityPanel from './EntityPanel'
+import EntityPanel from '../containers/EntityPanel'
 
 const App = () => (
 	<div>

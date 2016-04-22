@@ -1,11 +1,13 @@
 import React from 'react'
-import Entity from './Entity'
+import Entity from '../containers/Entity'
 
 const EntityList = ({ entities }) => (
   <div>
-    <Entity value='e1'/>
-    <Entity value='e2'/>
-    <Entity value='e3'/>
+    {entities.map((entity, index) => 
+      <Entity key={index}
+        entityId={index}
+        entity={entity} />
+    )}
   </div>
 )
 
