@@ -61,7 +61,6 @@ export const showHideIntentProperty = (targetNode) => {
   }
 }
 
-// TODO
 export const sendCreateIntentRequest = () => {
   return {
     type: "SEND_CREATE_INTENT_REQUEST"
