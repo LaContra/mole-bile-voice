@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { clearIntents, addIntent } from '../actions'
+import { clearIntents, addIntent } from '../../common/actions'
 import IntentButtons from '../components/IntentButtons'
 
 const mapStateToProps = () => { return {} }

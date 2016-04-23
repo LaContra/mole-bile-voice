@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { sendCreateIntentRequest } from '../actions'
+import { sendCreateIntentRequest } from '../../common/actions'
 
 let IntentRequest = ({ dispatch }) => (
   <div>
