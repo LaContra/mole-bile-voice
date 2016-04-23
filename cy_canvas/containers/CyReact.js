@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import LocalStorage from '../utils/LocalStorage'
-import { addEdge, showHideIntentProperties } from '../actions'
+import LocalStorage from '../../utils/LocalStorage'
+import { addEdge, showHideIntentProperties } from '../../common/actions'
 import cytoscape from 'cytoscape'
 
 
@@ -43,8 +43,6 @@ const Cy = React.createClass({
         padding: 5
       }
     });
-
-    console.log("created cy");
 
     this.setEventListner();
     this.showHideIntentProperties();

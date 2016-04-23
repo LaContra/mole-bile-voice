@@ -47,7 +47,7 @@ export const changeUserSaysField = (value) => {
   }
 }
 
-export const chnageResponseField = (value) => {
+export const changeResponseField = (value) => {
   return {
     type: "CHANGE_RESPONSE_FIELD",
     value

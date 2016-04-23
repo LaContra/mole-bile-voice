@@ -1,4 +1,4 @@
-import LocalStorage from '../utils/LocalStorage'
+import LocalStorage from '../../utils/LocalStorage'
 import $ from 'jquery'
 
 const unselectElement = (element) => {
@@ -117,20 +117,17 @@ const sendCreateIntentRequest = (intentData) => {
       contentType: "application/json",
       complete: function(e) { console.log(e)}
   })
-  console.log(JSON.stringify(intentData))
 }
 
 const cyElements = (state, action) => {
   if (typeof state === 'undefined') {
     const localState = LocalStorage.getElements();
-    console.log(localState)
     return localState == null? []: localState
   }
 
   switch(action.type) {
     /* panel control */
     case 'CLEAR_INTENTS':
-      console.log('clear intents');
       return []
 
     case 'ADD_INTENT':
@@ -157,7 +154,6 @@ const cyElements = (state, action) => {
       // position: { x: -this.state.cy.viewport().pan().x / this.state.cy.zoom() + 40, y: -this.state.cy.viewport().pan().y / this.state.cy.zoom() + 40 }
 
     case 'ADD_EDGE':
-      console.log("add edge");
       // FIXME: temporarily avoid cycle in one intent
       if (getEdgesBetween(action.target, action.source, state).length > 0) {
         return state.map(t => unselectElement(t))
@@ -181,7 +177,6 @@ const cyElements = (state, action) => {
 
     // create intent 
     case 'SEND_CREATE_INTENT_REQUEST':
-      console.log("send create intent request");
       buildIntentsDataFromCyElements(state).forEach(sendCreateIntentRequest)
       return state
 

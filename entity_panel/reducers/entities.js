@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import LocalStorage from '../utils/LocalStorage'
+import LocalStorage from '../../utils/LocalStorage'
 
 const changeEntityName = (entities, entityId, name) => {
   return entities.map((entity, index) => {
