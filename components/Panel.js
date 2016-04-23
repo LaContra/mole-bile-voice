@@ -5,7 +5,7 @@ import ResponsePropertyControl from '../containers/ResponsePropertyControl'
 import IntentRequest from '../containers/IntentRequest'
 
 const Panel = () => (
-  <div id="panel">
+  <div className="base_panel">
     <IntentControl />
     <UserSaysPropertyControl />
     <ResponsePropertyControl />

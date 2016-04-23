@@ -17,6 +17,11 @@ var LocalStorage = React.createClass({
       localStorage.setItem("elementId", elementId);
       localStorage.setItem("elements", JSON.stringify(elements));
     },
+
+    saveEntities: function(entities) {
+      localStorage.setItem("entities", JSON.stringify(entities))
+    },
+
     getElements: function(key) {
       if (key == null) {
         var elements = localStorage.getItem("elements");
@@ -26,6 +31,9 @@ var LocalStorage = React.createClass({
         else {
           return null;
         }
+      }
+      else if (key == "entities") {
+        return JSON.parse(localStorage.getItem(key));
       }
       else {
         return localStorage.getItem(key)

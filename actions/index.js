@@ -67,3 +67,49 @@ export const sendCreateIntentRequest = () => {
     type: "SEND_CREATE_INTENT_REQUEST"
   }
 }
+
+// Entity
+export const addEntity = () => {
+  return {
+    type: "ADD_ENTITY"
+  }
+}
+
+export const changeEntityName = (entityId, name) => {
+  return {
+    type: "CHANGE_ENTITY_NAME",
+    entityId,
+    name
+  }
+}
+
+export const saveEntities = () => {
+  return {
+    type: "SAVE_ENTITIES"
+  }
+}
+
+export const addReferenceEntry = (entityId) => {
+  return {
+    type: "ADD_REFERENCE_ENTRY",
+    entityId
+  }
+}
+
+export const changeReferenceValue = (entityId, refId, refValue) => {
+  return {
+    type: "CHANGE_REFERENCE_VALUE",
+    entityId,
+    refId,
+    refValue
+  }
+}
+
+export const changeSynonyms = (entityId, refId, synonyms) => {
+  return {
+    type: "CHANGE_SYNONYMS",
+    entityId,
+    refId,
+    synonyms
+  }
+}
