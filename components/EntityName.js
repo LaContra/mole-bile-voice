@@ -1,16 +1,18 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { changeEntityName } from '../actions'
+import React, { PropTypes } from 'react'
 
-let EntityName = ({ entityId, name, dispatch }) => (
+const EntityName = ({ entityId, name, onEntityNameChange }) => (
   <div>
     <input type="text" 
       placeholder="entity name"
       value={name}
-      onChange={e => dispatch(changeEntityName(entityId, e.target.value))}/>
+      onChange={e => onEntityNameChange(entityId, e.target.value)}/>
   </div>
 )
 
-EntityName = connect()(EntityName)
+EntityName.propTypes = {
+  entityId: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  onEntityNameChange: PropTypes.func.isRequired
+}
 
 export default EntityName

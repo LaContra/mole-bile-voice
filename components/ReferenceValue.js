@@ -1,16 +1,19 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { changeReferenceValue } from '../actions'
+import React, { PropTypes } from 'react'
 
-let ReferenceValue = ({ entityId, refId, referenceValue, dispatch }) => (
+const ReferenceValue = ({ entityId, refId, referenceValue, onReferenceValueChange }) => (
   <div>
     <input type="text" 
       placeholder="reference value"
       value={referenceValue}
-      onChange={e => dispatch(changeReferenceValue(entityId, refId, e.target.value))}/>
+      onChange={e => onReferenceValueChange(entityId, refId, e.target.value)}/>
   </div>
 )
 
-ReferenceValue = connect()(ReferenceValue)
+ReferenceValue.propTypes = {
+  entityId: PropTypes.number.isRequired,
+  refId: PropTypes.number.isRequired,
+  referenceValue: PropTypes.string.isRequired,
+  onReferenceValueChange: PropTypes.func.isRequired
+}
 
 export default ReferenceValue
