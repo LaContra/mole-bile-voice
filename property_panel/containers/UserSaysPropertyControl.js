@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { saveUserSaysProperties, changeUserSaysField, showHideIntentProperties } from '../actions'
+import { saveUserSaysProperties, changeUserSaysField, showHideIntentProperties } from '../../common/actions'
 import UserSaysProperty from '../components/UserSaysProperty'
 
 const mapStateToProps = (state) => { 

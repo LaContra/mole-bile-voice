@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { changeEntityName, addReferenceEntry, changeReferenceValue, changeSynonyms } from '../actions'
+import { changeEntityName, addReferenceEntry, changeReferenceValue, changeSynonyms } from '../../common/actions'
 import EntityControl from './EntityControl'
 import EntityList from '../components/EntityList'
 

@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addEntity, saveEntities } from '../actions'
-
+import { addEntity, saveEntities } from '../../common/actions'
 let EntityControl = ({ dispatch }) => (
   <div>
     <button className="btn btn-default"

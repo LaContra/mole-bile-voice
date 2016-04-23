@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { saveResponseProperties, chnageResponseField, showHideIntentProperties } from '../actions'
+import { saveResponseProperties, changeResponseField, showHideIntentProperties } from '../../common/actions'
 import ResponseProperty from '../components/ResponseProperty'
 
 const mapStateToProps = (state) => { 
@@ -15,7 +15,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(showHideIntentProperties(null))
     },
     onResponseChange: (value) => {
-      dispatch(chnageResponseField(value))
+      dispatch(changeResponseField(value))
     },
   }
 }
