@@ -1,5 +1,5 @@
 import React from 'react'
-import Entity from '../containers/Entity'
+import Entity from './Entity'
 
 const EntityList = ({ entities }) => (
   <div>

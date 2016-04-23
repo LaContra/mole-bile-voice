@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { addReferenceEntry } from '../actions'
 import EntityName from './EntityName'
-import ReferenceEntryList from '../components/ReferenceEntryList'
+import ReferenceEntryList from './ReferenceEntryList'
 
 
 let Entity = ({ entityId, entity, dispatch }) => (

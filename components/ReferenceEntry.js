@@ -1,6 +1,6 @@
 import React from 'react'
-import ReferenceValue from '../containers/ReferenceValue'
-import SynonymList from '../containers/SynonymList'
+import ReferenceValue from './ReferenceValue'
+import SynonymList from './SynonymList'
 
 const ReferenceEntry = ({ entityId, refId, referenceValue, synonyms }) => (
   <div>

@@ -95,7 +95,7 @@ const entities = (state, action) => {
     case "ADD_REFERENCE_ENTRY":
       return addReferenceEntry(state, action.entityId, {
         value: '',
-        synonyms: ''
+        synonyms: []
       })
     case "CHANGE_REFERENCE_VALUE":
       return changeReferenceValue(state, action.entityId, action.refId, action.refValue)
