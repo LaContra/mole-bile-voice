@@ -28,12 +28,12 @@ const filterNodeResponse = (element) => {
   return filterNode(element) && element.classes == "response"
 }
 
-const filterEdgeOut = (edge, nodeId) => {
-  return edge.data.source == nodeId
+const filterEdgeOut = (element, nodeId) => {
+  return filterEdge(element) && element.data.source == nodeId
 }
 
-const filterEdgeIn = (edge, nodeId) => {
-  return edge.data.target == nodeId
+const filterEdgeIn = (element, nodeId) => {
+  return filterEdge(element) && element.data.target == nodeId
 }
 
 const getTargetId = (edge, elements) => {
@@ -182,6 +182,9 @@ const cyElements = (state, action) => {
     case 'ADD_EDGE':
       // FIXME: temporarily avoid cycle in one intent
       if (getEdgesBetween(action.target, action.source, state).length > 0) {
+        return state.map(t => unselectElement(t))
+      }
+      if (action.edgeType == "us2r" && state.filter(t => filterEdgeOut(t, action.source)).length > 0) {
         return state.map(t => unselectElement(t))
       }
       return [ ...state.map(t => unselectElement(t)), {
