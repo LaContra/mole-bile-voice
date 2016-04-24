@@ -150,25 +150,34 @@ const cyElements = (state, action) => {
     case 'ADD_INTENT':
       return [ ...state.map(t => unselectElement(t)), {
           group: "nodes",
-          data: { user_says: "", id: action.id-3 },
+          data: { user_says: "", id: action.id },
           classes: "user_says",
           position: {x: 100, y: 100},
         },
         {
           group: "nodes",
-          data: { response: "", id: action.id-2, action: "" },
+          data: { response: "", id: action.id+1, action: "" },
           classes: "response",
           position: {x: 140, y: 100},
         },
         {
           group: "edges",
-          data: {source: action.id-3, target: action.id-2, id: action.id-1},
+          data: {source: action.id, target: action.id+1, id: action.id+2},
           classes: "us2r",
           selectable: false,
         }
       ]
       // TODO: position
       // position: { x: -this.state.cy.viewport().pan().x / this.state.cy.zoom() + 40, y: -this.state.cy.viewport().pan().y / this.state.cy.zoom() + 40 }
+
+    case 'ADD_USER_SAYS':
+      return [ ...state.map(t => unselectElement(t)), {
+          group: "nodes",
+          data: { user_says: "", id: action.id },
+          classes: "user_says",
+          position: {x: 100, y: 100},
+        }
+      ]
 
     case 'ADD_EDGE':
       // FIXME: temporarily avoid cycle in one intent
@@ -178,7 +187,7 @@ const cyElements = (state, action) => {
       return [ ...state.map(t => unselectElement(t)), {
         group: "edges",
         data: {source: action.source, target: action.target, id: action.id},
-        classes: "r2us",
+        classes: action.edgeType,
         selectable: false,
       }]
     

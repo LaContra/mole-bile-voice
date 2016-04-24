@@ -11,16 +11,24 @@ export const clearIntents = () => {
 export const addIntent = () => {
   return {
     type: "ADD_INTENT",
-    id: intentId+=3
+    id: (intentId+=3)-3
   }
 }
 
-export const addEdge = (source, target) => {
+export const addUserSays = () => {
+  return {
+    type: "ADD_USER_SAYS",
+    id: intentId++
+  }
+}
+
+export const addEdge = (source, target, edgeType) => {
   return {
     type: "ADD_EDGE",
     source,
     target,
-    id: intentId++
+    id: intentId++,
+    edgeType
   }
 }
 

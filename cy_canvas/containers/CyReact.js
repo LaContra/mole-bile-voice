@@ -54,10 +54,10 @@ const Cy = React.createClass({
     this._edgeTo = null;
 
     /* Edge control */
-    this.cy.on('cxtdrag', 'node.response', this.dragNode);
-    this.cy.on('cxtdragover', 'node.user_says', this.dragOverNode);
-    this.cy.on('cxtdragout', 'node.user_says', this.dragOutNode);
-    this.cy.on('cxttapend', 'node.response', this.tapEndNode);
+    this.cy.on('cxtdrag', 'node', this.dragNode);
+    this.cy.on('cxtdragover', 'node', this.dragOverNode);
+    this.cy.on('cxtdragout', 'node', this.dragOutNode);
+    this.cy.on('cxttapend', 'node', this.tapEndNode);
 
     // save elements to local storage
     this.cy.on('position', this.saveToLocalStorage);
@@ -82,10 +82,14 @@ const Cy = React.createClass({
     var node = evt.cyTarget;
     this._cxtdragStart = true;
     this._edgeFrom = node;
+    this._edgeType = node.hasClass("user_says")? "us2r": "r2us"
   },
 
   dragOverNode: function(evt) {
     var node = evt.cyTarget;
+    if (node.hasClass("user_says") ^ this._edgeType == "r2us") {
+      return 
+    }
     if (!this._cxtdragStart || node == this._edgeFrom) {
         return;
     }
@@ -94,6 +98,9 @@ const Cy = React.createClass({
 
   dragOutNode: function(evt) {
     var node = evt.cyTarget;
+    if (node.hasClass("user_says") ^ this._edgeType == "r2us") {
+      return 
+    }
     if (!this._cxtdragStart || node != this._edgeTo) {
         return
     }
@@ -102,6 +109,9 @@ const Cy = React.createClass({
 
   tapEndNode: function(evt) {
     var node = evt.cyTarget;
+    if (node.hasClass("user_says") ^ this._edgeType == "us2r") {
+      return 
+    }
     if (!this._cxtdragStart) {
         return
     }
@@ -109,8 +119,7 @@ const Cy = React.createClass({
     if (this._edgeTo == null) {
         return
     }
-
-    this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id());
+    this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id(), this._edgeType);
     this._edgeTo = null;
   },
 
@@ -143,8 +152,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addEdge: (source, target) => {
-      dispatch(addEdge(source, target));
+    addEdge: (source, target, type) => {
+      dispatch(addEdge(source, target, type));
     },
     showHideIntentProperties: (targetNode, nodeType) => {
       dispatch(showHideIntentProperties(targetNode, nodeType));
