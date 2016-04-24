@@ -60,6 +60,7 @@ const getIntents = (elements) => {
       responseId: responseNodeId,
       userSayses: userSaysNode.data.user_says.split("\n"),
       responses: responseNode.data.response.split("\n"),
+      action: responseNode.data.action,
     }
   })
 }
@@ -101,25 +102,14 @@ const assignContextName = (intent, intents) => {
 }
 
 const buildApiData = (intent) => {
-<<<<<<< HEAD
-  const userSayses = intent.userSaysNode.data.user_says.split("\n")
-  const responses = intent.responseNode.data.response.split("\n")
-  const action = intent.responseNode.data.action
-
-=======
->>>>>>> Updated submit algorithm: create intent based on user says
   return {
     name: intent.name,
     contexts: intent.contextsIn,
     templates: intent.userSayses,
     responses: [
       {
-<<<<<<< HEAD
-        action: action,
-        speech: responses,
-=======
+        action: intent.action,
         speech: intent.responses,
->>>>>>> Updated submit algorithm: create intent based on user says
         affectedContexts: intent.contextsOut
       }
     ]
@@ -133,16 +123,17 @@ const buildIntentsDataFromCyElements = (elements) => {
 }
 
 const sendCreateIntentRequest = (intentData) => {
-  $.ajax({
-      url: "https://api.api.ai/v1/intents?v=20160416",
-      beforeSend: function (request) {
-          request.setRequestHeader("Authorization", "Bearer key");
-      },
-      type: "POST",
-      data: JSON.stringify(intentData),
-      contentType: "application/json",
-      complete: function(e) { console.log(e)}
-  })
+  // $.ajax({
+  //     url: "https://api.api.ai/v1/intents?v=20160416",
+  //     beforeSend: function (request) {
+  //         request.setRequestHeader("Authorization", "Bearer key");
+  //     },
+  //     type: "POST",
+  //     data: JSON.stringify(intentData),
+  //     contentType: "application/json",
+  //     complete: function(e) { console.log(e)}
+  // })
+  console.log(intentData)
 }
 
 const cyElements = (state, action) => {
