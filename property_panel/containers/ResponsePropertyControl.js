@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { saveResponseProperties, changeResponseField, showHideIntentProperties } from '../../common/actions'
+import { saveResponseProperties, changeResponseField, changeActionField, showHideIntentProperties } from '../../common/actions'
 import ResponseProperty from '../components/ResponseProperty'
 
 const mapStateToProps = (state) => { 
@@ -10,13 +10,16 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSaveResponsePropertiesClick: (nodeId, response) => {
-      dispatch(saveResponseProperties(nodeId, response))
+    onSaveResponsePropertiesClick: (nodeId, response, action) => {
+      dispatch(saveResponseProperties(nodeId, response, action))
       dispatch(showHideIntentProperties(null))
     },
     onResponseChange: (value) => {
       dispatch(changeResponseField(value))
     },
+    onActionChange: (value) => {
+      dispatch(changeActionField(value))
+    }
   }
 }
 

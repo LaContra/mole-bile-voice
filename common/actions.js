@@ -32,17 +32,25 @@ export const saveUserSaysProperties = (nodeId, userSays) => {
   }
 }
 
-export const saveResponseProperties = (nodeId, response) => {
+export const saveResponseProperties = (nodeId, response, action) => {
   return {
     type: "SAVE_RESPONSE_PROPERTIES",
     nodeId,
-    response
+    response,
+    action
   }
 }
 
 export const changeUserSaysField = (value) => {
   return {
     type: "CHANGE_USER_SAYS_FIELD",
+    value
+  }
+}
+
+export const changeActionField = (value) => {
+  return {
+    type: "CHANGE_ACTION_FIELD",
     value
   }
 }

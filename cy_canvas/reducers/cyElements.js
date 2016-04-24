@@ -85,6 +85,7 @@ const assignContextName = (intent, elements) => {
 const buildApiData = (intent) => {
   const userSayses = intent.userSaysNode.data.user_says.split("\n")
   const responses = intent.responseNode.data.response.split("\n")
+  const action = intent.responseNode.data.action
 
   return {
     name: `${intent.userSaysNode.data.id}: ${userSayses[0]}+${responses[0]}`,
@@ -92,6 +93,7 @@ const buildApiData = (intent) => {
     templates: userSayses,
     responses: [
       {
+        action: action,
         speech: responses,
         affectedContexts: intent.contextsOut
       }
@@ -139,7 +141,7 @@ const cyElements = (state, action) => {
         },
         {
           group: "nodes",
-          data: { response: "", id: action.id-2 },
+          data: { response: "", id: action.id-2, action: "" },
           classes: "response",
           position: {x: 140, y: 100},
         },
@@ -172,7 +174,8 @@ const cyElements = (state, action) => {
 
     case "SAVE_RESPONSE_PROPERTIES":
       return state.map(t => modifyElement(unselectElement(t), action.nodeId, {
-        response: action.response
+        response: action.response,
+        action: action.action
       }))
 
     // create intent 
