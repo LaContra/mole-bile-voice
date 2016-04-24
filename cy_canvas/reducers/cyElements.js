@@ -112,7 +112,7 @@ const sendCreateIntentRequest = (intentData) => {
   $.ajax({
       url: "https://api.api.ai/v1/intents?v=20160416",
       beforeSend: function (request) {
-          request.setRequestHeader("Authorization", "Bearer 272d5342fd914740b8f35dada8727622");
+          request.setRequestHeader("Authorization", "Bearer key");
       },
       type: "POST",
       data: JSON.stringify(intentData),
