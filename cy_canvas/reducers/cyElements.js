@@ -134,17 +134,17 @@ const buildIntentsDataFromCyElements = (elements) => {
 }
 
 const sendCreateIntentRequest = (intentData) => {
-  // $.ajax({
-  //     url: "https://api.api.ai/v1/intents?v=20160416",
-  //     beforeSend: function (request) {
-  //         request.setRequestHeader("Authorization", "Bearer key");
-  //     },
-  //     type: "POST",
-  //     data: JSON.stringify(intentData),
-  //     contentType: "application/json",
-  //     complete: function(e) { console.log(e)}
-  // })
-  console.log(intentData)
+  $.ajax({
+      url: "https://api.api.ai/v1/intents?v=20160416",
+      beforeSend: function (request) {
+          request.setRequestHeader("Authorization", "Bearer key");
+      },
+      type: "POST",
+      data: JSON.stringify(intentData),
+      contentType: "application/json",
+      complete: function(e) { console.log(e)}
+  })
+  // console.log(intentData)
 }
 
 const cyElements = (state, action) => {
