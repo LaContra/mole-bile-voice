@@ -195,6 +195,10 @@ const cyElements = (state, action) => {
       if (getEdgesBetween(action.target, action.source, state).length > 0) {
         return state.map(t => unselectElement(t))
       }
+      // avoid adding repeat edge
+      if (getEdgesBetween(action.source, action.target, state).length > 0) {
+        return state.map(t => unselectElement(t))
+      }
       if (action.edgeType == "us2r" && state.filter(t => filterEdgeOut(t, action.source)).length > 0) {
         return state.map(t => unselectElement(t))
       }
