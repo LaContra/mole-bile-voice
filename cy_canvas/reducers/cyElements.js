@@ -50,14 +50,19 @@ const getEdgesBetween = (nodeFromId, nodeToId, elements) => {
   })
 }
 
-const getIntents = (elements) => {
+const verifyAndGetIntents = (elements) => {
   return elements.filter(filterNodeUserSays).map(userSaysNode => {
-    const responseNodeId = elements.filter(e => filterEdgeOut(e, userSaysNode.data.id)).map(getTargetId)[0]
-    const responseNode = elements.filter(e => e.data.id == responseNodeId)[0]
+    const responseNodeIds = elements.filter(e => filterEdgeOut(e, userSaysNode.data.id)).map(getTargetId)
+
+    if (responseNodeIds.length == 0) {
+      return null
+    }
+
+    const responseNode = elements.filter(e => e.data.id == responseNodeIds[0])[0]
 
     return {
       userSaysId: userSaysNode.data.id,
-      responseId: responseNodeId,
+      responseId: responseNodeIds[0],
       userSayses: userSaysNode.data.user_says.split("\n"),
       responses: responseNode.data.response.split("\n"),
       action: responseNode.data.action,
@@ -117,9 +122,15 @@ const buildApiData = (intent) => {
 }
 
 const buildIntentsDataFromCyElements = (elements) => {
-  const intents = getIntents(elements).map(assignIntentName).map(i => assignInOutEdges(i, elements))
+  let intents = verifyAndGetIntents(elements)
 
-  return intents.map(i => assignContextName(i, intents)).map(buildApiData)
+  if (intents.indexOf(null) >= 0) {
+    alert("Error: there is lonely user says, find it out!")
+    return []
+  }
+
+  return intents.map(assignIntentName).map(i => assignInOutEdges(i, elements))
+        .map(i => assignContextName(i, intents)).map(buildApiData)
 }
 
 const sendCreateIntentRequest = (intentData) => {
