@@ -7,7 +7,8 @@ const intentPropertiesPanel = (state = {
   response: {
     hideProperty: true,
     text: '', 
-    selectedNode: -1
+    selectedNode: -1,
+    action: ''
   }
 }, action) => {
   switch(action.type) {
@@ -22,7 +23,8 @@ const intentPropertiesPanel = (state = {
           response: {
             hideProperty: action.nodeType != 'response',
             text: action.targetNode.data.response || "", 
-            selectedNode: parseInt(action.targetNode.data.id)
+            selectedNode: parseInt(action.targetNode.data.id),
+            action: action.targetNode.data.action
           }
         }
       }
@@ -37,6 +39,10 @@ const intentPropertiesPanel = (state = {
     case 'CHANGE_RESPONSE_FIELD':
       return Object.assign({}, state, {
         response: Object.assign({}, state.response, {text: action.value}),
+      })
+    case 'CHANGE_ACTION_FIELD':
+      return Object.assign({}, state, {
+        response: Object.assign({}, state.response, {action: action.action}),
       })
     default:
       return state
