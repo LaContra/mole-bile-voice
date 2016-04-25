@@ -54,19 +54,27 @@ const getEdgesBetween = (nodeFromId, nodeToId, elements) => {
   })
 }
 
-const verifyAndGetIntents = (elements) => {
+const verifyUserSayses = (elements) => {
+  return !elements.filter(filterNodeUserSays).map(node =>
+    elements.filter(e => filterEdgeOut(e, node.data.id)).length
+  ).includes(0)
+}
+
+const verifyResponses = (elements) => {
+  return !elements.filter(filterNodeResponse).map(node =>
+    elements.filter(e => filterEdgeIn(e, node.data.id)).length
+  ).includes(0)
+}
+
+
+const getIntents = (elements) => {
   return elements.filter(filterNodeUserSays).map(userSaysNode => {
-    const responseNodeIds = elements.filter(e => filterEdgeOut(e, userSaysNode.data.id)).map(getTargetId)
-
-    if (responseNodeIds.length == 0) {
-      return null
-    }
-
-    const responseNode = elements.filter(e => e.data.id == responseNodeIds[0])[0]
+    const responseNodeId = elements.filter(e => filterEdgeOut(e, userSaysNode.data.id)).map(getTargetId)[0]
+    const responseNode = elements.filter(e => e.data.id == responseNodeId)[0]
 
     return {
       userSaysId: userSaysNode.data.id,
-      responseId: responseNodeIds[0],
+      responseId: responseNodeId,
       userSayses: userSaysNode.data.user_says.split("\n"),
       responses: responseNode.data.response.split("\n"),
       action: responseNode.data.action,
@@ -126,12 +134,17 @@ const buildApiData = (intent) => {
 }
 
 const buildIntentsDataFromCyElements = (elements) => {
-  let intents = verifyAndGetIntents(elements)
-
-  if (intents.indexOf(null) >= 0) {
+  if (!verifyUserSayses(elements)) {
     alert("Error: there is lonely user says, find it out!")
     return []
   }
+
+  if (!verifyResponses(elements)) {
+    alert("Error: there is lonely response, find it out!")
+    return []
+  }
+
+  let intents = getIntents(elements)
 
   return intents.map(assignIntentName).map(i => assignInOutEdges(i, elements))
         .map(i => assignContextName(i, intents)).map(buildApiData)
