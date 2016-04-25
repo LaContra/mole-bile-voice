@@ -236,8 +236,9 @@ const cyElements = (state, action) => {
       }))
 
     case "DELETE_ELEMENTS":
+      const deletedIds = action.elements.map(getId)
       const remain = state.filter(t => 
-        !action.elements.map(getId).includes(t.data.id)
+        !deletedIds.includes(t.data.id)
       )
       const remainNodeIds = remain.filter(filterNode).map(getId)
       // if node deleted, edges linked to it deleted as well
