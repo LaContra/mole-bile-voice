@@ -82,14 +82,10 @@ const Cy = React.createClass({
     var node = evt.cyTarget;
     this._cxtdragStart = true;
     this._edgeFrom = node;
-    this._edgeType = node.hasClass("user_says")? "us2r": "r2us"
   },
 
   dragOverNode: function(evt) {
     var node = evt.cyTarget;
-    if (node.hasClass("user_says") ^ this._edgeType == "r2us") {
-      return 
-    }
     if (!this._cxtdragStart || node == this._edgeFrom) {
         return;
     }
@@ -98,9 +94,6 @@ const Cy = React.createClass({
 
   dragOutNode: function(evt) {
     var node = evt.cyTarget;
-    if (node.hasClass("user_says") ^ this._edgeType == "r2us") {
-      return 
-    }
     if (!this._cxtdragStart || node != this._edgeTo) {
         return
     }
@@ -109,9 +102,6 @@ const Cy = React.createClass({
 
   tapEndNode: function(evt) {
     var node = evt.cyTarget;
-    if (node.hasClass("user_says") ^ this._edgeType == "us2r") {
-      return 
-    }
     if (!this._cxtdragStart) {
         return
     }
@@ -119,7 +109,12 @@ const Cy = React.createClass({
     if (this._edgeTo == null) {
         return
     }
-    this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id(), this._edgeType);
+    if (this._edgeFrom.hasClass("user_says") && this._edgeTo.hasClass("response")) {
+      this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id(), "us2r");
+    }
+    else if (this._edgeFrom.hasClass("response") && this._edgeTo.hasClass("user_says")) {
+      this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id(), "r2us");
+    }
     this._edgeTo = null;
   },
 
