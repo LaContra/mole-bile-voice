@@ -54,10 +54,10 @@ const Cy = React.createClass({
     this._edgeTo = null;
 
     /* Edge control */
-    this.cy.on('cxtdrag', 'node.response', this.dragNode);
-    this.cy.on('cxtdragover', 'node.user_says', this.dragOverNode);
-    this.cy.on('cxtdragout', 'node.user_says', this.dragOutNode);
-    this.cy.on('cxttapend', 'node.response', this.tapEndNode);
+    this.cy.on('cxtdrag', 'node', this.dragNode);
+    this.cy.on('cxtdragover', 'node', this.dragOverNode);
+    this.cy.on('cxtdragout', 'node', this.dragOutNode);
+    this.cy.on('cxttapend', 'node', this.tapEndNode);
 
     // save elements to local storage
     this.cy.on('position', this.saveToLocalStorage);
@@ -109,8 +109,12 @@ const Cy = React.createClass({
     if (this._edgeTo == null) {
         return
     }
-
-    this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id());
+    if (this._edgeFrom.hasClass("user_says") && this._edgeTo.hasClass("response")) {
+      this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id(), "us2r");
+    }
+    else if (this._edgeFrom.hasClass("response") && this._edgeTo.hasClass("user_says")) {
+      this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id(), "r2us");
+    }
     this._edgeTo = null;
   },
 
@@ -143,8 +147,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addEdge: (source, target) => {
-      dispatch(addEdge(source, target));
+    addEdge: (source, target, type) => {
+      dispatch(addEdge(source, target, type));
     },
     showHideIntentProperties: (targetNode, nodeType) => {
       dispatch(showHideIntentProperties(targetNode, nodeType));

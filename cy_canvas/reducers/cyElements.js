@@ -28,12 +28,12 @@ const filterNodeResponse = (element) => {
   return filterNode(element) && element.classes == "response"
 }
 
-const filterEdgeOut = (edge, node) => {
-  return edge.data.source == node.data.id
+const filterEdgeOut = (element, nodeId) => {
+  return filterEdge(element) && element.data.source == nodeId
 }
 
-const filterEdgeIn = (edge, node) => {
-  return edge.data.target == node.data.id
+const filterEdgeIn = (element, nodeId) => {
+  return filterEdge(element) && element.data.target == nodeId
 }
 
 const getTargetId = (edge, elements) => {
@@ -50,51 +50,71 @@ const getEdgesBetween = (nodeFromId, nodeToId, elements) => {
   })
 }
 
-const getIntents = (elements) => {
+const verifyAndGetIntents = (elements) => {
   return elements.filter(filterNodeUserSays).map(userSaysNode => {
-    const responseNodeId = elements.filter(e => filterEdgeOut(e, userSaysNode)).map(getTargetId)[0]
-    const responseNode = elements.filter(e => e.data.id == responseNodeId)[0]
+    const responseNodeIds = elements.filter(e => filterEdgeOut(e, userSaysNode.data.id)).map(getTargetId)
+
+    if (responseNodeIds.length == 0) {
+      return null
+    }
+
+    const responseNode = elements.filter(e => e.data.id == responseNodeIds[0])[0]
 
     return {
-      userSaysNode: userSaysNode,
-      responseNode: responseNode,
+      userSaysId: userSaysNode.data.id,
+      responseId: responseNodeIds[0],
+      userSayses: userSaysNode.data.user_says.split("\n"),
+      responses: responseNode.data.response.split("\n"),
+      action: responseNode.data.action,
     }
+  })
+}
+
+const assignIntentName = (intent) => {
+  return Object.assign({}, intent, {
+    name: `${intent.userSaysId}: ${intent.userSayses[0]}+${intent.responses[0]}`,
   })
 }
 
 const assignInOutEdges = (intent, elements) => {
   return Object.assign({}, intent, {
-    edgesIn: elements.filter(e => filterEdgeIn(e, intent.userSaysNode)),
-    edgesOut: elements.filter(e => filterEdgeOut(e, intent.responseNode))
+    edgesIn: elements.filter(e => filterEdgeIn(e, intent.userSaysId)),
+    edgesOut: elements.filter(e => filterEdgeOut(e, intent.responseId)),
   })
 }
 
-const getContextNameFromEdge = (edge, elements) => {
-  const source = elements.filter(e => e.data.id == edge.data.source)[0].data.response.split("\n")[0]
-  const target = elements.filter(e => e.data.id == edge.data.target)[0].data.user_says.split("\n")[0]
-  return `${source}_${target}`.replace(/ /g, '')
+const getSourceIntent = (edge, intents) => {
+  return intents.filter(intent => 
+    intent.responseId == edge.data.source
+  )[0]
 }
 
-const assignContextName = (intent, elements) => {
+const getTargetIntent = (edge, intents) => {
+  return intents.filter(intent =>
+    intent.userSaysId == edge.data.target
+  )[0]
+}
+
+const getContextName = (fromIntent, toIntent) => {
+  return `${fromIntent.name}_${toIntent.name}`.replace(/ /g, '')
+}
+
+const assignContextName = (intent, intents) => {
   return Object.assign({}, intent, {
-    contextsIn: intent.edgesIn.map(e => getContextNameFromEdge(e, elements)),
-    contextsOut: intent.edgesOut.map(e => getContextNameFromEdge(e, elements))
+    contextsIn: intent.edgesIn.map(e => getSourceIntent(e, intents)).map(i => getContextName(i, intent)),
+    contextsOut: intent.edgesOut.map(e => getTargetIntent(e, intents)).map(i => getContextName(intent, i)),
   })
 }
 
 const buildApiData = (intent) => {
-  const userSayses = intent.userSaysNode.data.user_says.split("\n")
-  const responses = intent.responseNode.data.response.split("\n")
-  const action = intent.responseNode.data.action
-
   return {
-    name: `${intent.userSaysNode.data.id}: ${userSayses[0]}+${responses[0]}`,
+    name: intent.name,
     contexts: intent.contextsIn,
-    templates: userSayses,
+    templates: intent.userSayses,
     responses: [
       {
-        action: action,
-        speech: responses,
+        action: intent.action,
+        speech: intent.responses,
         affectedContexts: intent.contextsOut
       }
     ]
@@ -102,10 +122,15 @@ const buildApiData = (intent) => {
 }
 
 const buildIntentsDataFromCyElements = (elements) => {
-  return getIntents(elements)
-    .map(i => assignInOutEdges(i, elements))
-    .map(i => assignContextName(i, elements))
-    .map(buildApiData)
+  let intents = verifyAndGetIntents(elements)
+
+  if (intents.indexOf(null) >= 0) {
+    alert("Error: there is lonely user says, find it out!")
+    return []
+  }
+
+  return intents.map(assignIntentName).map(i => assignInOutEdges(i, elements))
+        .map(i => assignContextName(i, intents)).map(buildApiData)
 }
 
 const sendCreateIntentRequest = (intentData) => {
@@ -119,6 +144,7 @@ const sendCreateIntentRequest = (intentData) => {
       contentType: "application/json",
       complete: function(e) { console.log(e)}
   })
+  // console.log(intentData)
 }
 
 const cyElements = (state, action) => {
@@ -135,19 +161,19 @@ const cyElements = (state, action) => {
     case 'ADD_INTENT':
       return [ ...state.map(t => unselectElement(t)), {
           group: "nodes",
-          data: { user_says: "", id: action.id-3 },
+          data: { user_says: "", id: action.id },
           classes: "user_says",
           position: {x: 100, y: 100},
         },
         {
           group: "nodes",
-          data: { response: "", id: action.id-2, action: "" },
+          data: { response: "", id: action.id+1, action: "" },
           classes: "response",
           position: {x: 140, y: 100},
         },
         {
           group: "edges",
-          data: {source: action.id-3, target: action.id-2, id: action.id-1},
+          data: {source: action.id, target: action.id+1, id: action.id+2},
           classes: "us2r",
           selectable: false,
         }
@@ -155,15 +181,31 @@ const cyElements = (state, action) => {
       // TODO: position
       // position: { x: -this.state.cy.viewport().pan().x / this.state.cy.zoom() + 40, y: -this.state.cy.viewport().pan().y / this.state.cy.zoom() + 40 }
 
+    case 'ADD_USER_SAYS':
+      return [ ...state.map(t => unselectElement(t)), {
+          group: "nodes",
+          data: { user_says: "", id: action.id },
+          classes: "user_says",
+          position: {x: 100, y: 100},
+        }
+      ]
+
     case 'ADD_EDGE':
       // FIXME: temporarily avoid cycle in one intent
       if (getEdgesBetween(action.target, action.source, state).length > 0) {
         return state.map(t => unselectElement(t))
       }
+      // avoid adding repeat edge
+      if (getEdgesBetween(action.source, action.target, state).length > 0) {
+        return state.map(t => unselectElement(t))
+      }
+      if (action.edgeType == "us2r" && state.filter(t => filterEdgeOut(t, action.source)).length > 0) {
+        return state.map(t => unselectElement(t))
+      }
       return [ ...state.map(t => unselectElement(t)), {
         group: "edges",
         data: {source: action.source, target: action.target, id: action.id},
-        classes: "r2us",
+        classes: action.edgeType,
         selectable: false,
       }]
     

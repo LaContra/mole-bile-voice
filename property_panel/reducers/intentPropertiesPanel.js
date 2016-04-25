@@ -18,13 +18,13 @@ const intentPropertiesPanel = (state = {
           userSays: {
             hideProperty: action.nodeType != 'userSays',
             text: action.targetNode.data.user_says || "", 
-            selectedNode: parseInt(action.targetNode.data.id)
+            selectedNode: parseInt(action.targetNode.data.id),
           },
           response: {
             hideProperty: action.nodeType != 'response',
             text: action.targetNode.data.response || "", 
             selectedNode: parseInt(action.targetNode.data.id),
-            action: action.targetNode.data.action
+            action: action.targetNode.data.action || ""
           }
         }
       }
