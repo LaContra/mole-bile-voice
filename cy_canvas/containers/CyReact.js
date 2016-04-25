@@ -67,17 +67,6 @@ const Cy = React.createClass({
 
     this.cy.on('select, unselect', '', this.selectedElementsChanged);
 
-    // TODO
-    // delete intent or edge
-    // $('body').keydown(function(event) {
-    //     if ($("input[type='text']:focus").length > 0) {
-    //         return;
-    //     }
-    //     var key = event.which || event.keyCode; // event.keyCode is used for IE8 and earlier
-    //     if (key == 8) {
-    //         this.cy.$(':selected').unselect().remove();
-    //     }
-    // })
   },
   
   dragNode: function(evt) {
