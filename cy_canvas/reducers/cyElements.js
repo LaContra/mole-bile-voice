@@ -36,6 +36,10 @@ const filterEdgeIn = (element, nodeId) => {
   return filterEdge(element) && element.data.target == nodeId
 }
 
+const getId = (element) => {
+  return element.data.id
+}
+
 const getTargetId = (edge, elements) => {
   return edge.data.target
 }
@@ -175,7 +179,6 @@ const cyElements = (state, action) => {
           group: "edges",
           data: {source: action.id, target: action.id+1, id: action.id+2},
           classes: "us2r",
-          selectable: false,
         }
       ]
       // TODO: position
@@ -206,7 +209,6 @@ const cyElements = (state, action) => {
         group: "edges",
         data: {source: action.source, target: action.target, id: action.id},
         classes: action.edgeType,
-        selectable: false,
       }]
     
     case "SAVE_USER_SAYS_PROPERTIES":
@@ -219,6 +221,17 @@ const cyElements = (state, action) => {
         response: action.response,
         action: action.action
       }))
+
+    case "DELETE_ELEMENTS":
+      const remain = state.filter(t => 
+        !action.elements.map(getId).includes(t.data.id)
+      )
+      const remainNodeIds = remain.filter(filterNode).map(getId)
+      // if node deleted, edges linked to it deleted as well
+      return remain.filter(t => 
+        filterNode(t) || remainNodeIds.includes(getSourceId(t)) 
+                      && remainNodeIds.includes(getTargetId(t))
+      )
 
     // create intent 
     case 'SEND_CREATE_INTENT_REQUEST':

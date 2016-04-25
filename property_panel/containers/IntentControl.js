@@ -1,8 +1,12 @@
 import { connect } from 'react-redux'
-import { clearIntents, addIntent, addUserSays } from '../../common/actions'
+import { clearIntents, addIntent, addUserSays, deleteElements } from '../../common/actions'
 import IntentButtons from '../components/IntentButtons'
 
-const mapStateToProps = () => { return {} }
+const mapStateToProps = (state) => { 
+  return {
+    selectedElements: state.intentControlPanel.selectedElements
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -16,7 +20,10 @@ const mapDispatchToProps = (dispatch) => {
     },
     onAddUserSaysClick: () => {
       dispatch(addUserSays())
-    }
+    },
+    onDeleteClick: (elements) => {
+      dispatch(deleteElements(elements))
+    },
   }
 }
 

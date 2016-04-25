@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../../utils/LocalStorage'
-import { addEdge, showHideIntentProperties } from '../../common/actions'
+import { addEdge, showHideIntentProperties, selectElements } from '../../common/actions'
 import cytoscape from 'cytoscape'
 
 
@@ -64,6 +64,8 @@ const Cy = React.createClass({
 
     // show or hide intent info editor
     this.cy.on('select, unselect', 'node', this.showHideIntentProperties);
+
+    this.cy.on('select, unselect', '', this.selectedElementsChanged);
 
     // TODO
     // delete intent or edge
@@ -128,6 +130,10 @@ const Cy = React.createClass({
     this.props.showHideIntentProperties(targetNode, type);
   },
 
+  selectedElementsChanged: function() {
+    this.props.selectElements(this.cy.$(":selected").jsons());
+  },
+
   saveToLocalStorage: function() {
     LocalStorage.saveElements([...this.cy.nodes().jsons(), ...this.cy.edges().jsons()])
   },
@@ -152,6 +158,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     showHideIntentProperties: (targetNode, nodeType) => {
       dispatch(showHideIntentProperties(targetNode, nodeType));
+    },
+    selectElements: (elements) => {
+      dispatch(selectElements(elements));
     }
   }
 }

@@ -78,6 +78,20 @@ export const showHideIntentProperties = (targetNode, nodeType) => {
   }
 }
 
+export const selectElements = (elements) => {
+  return {
+    type: "SELECT_ELEMENTS",
+    elements,
+  }
+}
+
+export const deleteElements = (elements) => {
+  return {
+    type: "DELETE_ELEMENTS",
+    elements,
+  }
+}
+
 export const sendCreateIntentRequest = () => {
   return {
     type: "SEND_CREATE_INTENT_REQUEST"
