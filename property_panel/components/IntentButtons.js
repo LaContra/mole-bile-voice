@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const IntentButtons = ({ onClearIntentsClick, onAddIntentClick, onAddUserSaysClick }) => (
+const IntentButtons = ({ selectedElements, onClearIntentsClick, onAddIntentClick, onAddUserSaysClick, onDeleteClick }) => (
   <div>
     <div>
       <button id="clear_btn" 
@@ -20,6 +20,12 @@ const IntentButtons = ({ onClearIntentsClick, onAddIntentClick, onAddUserSaysCli
         onClick={() => onAddUserSaysClick()}>Create User Says
       </button>
     </div>
+    <div>
+      <button
+        className="btn btn-default"
+        onClick={() => onDeleteClick(selectedElements)}>Delete
+      </button>
+    </div>
   </div>
 )
 
@@ -27,6 +33,7 @@ IntentButtons.propTypes = {
   onClearIntentsClick: PropTypes.func.isRequired,
   onAddIntentClick: PropTypes.func.isRequired,
   onAddUserSaysClick: PropTypes.func.isRequired,
+  onDeleteClick: PropTypes.func.isRequired,
 }
 
 export default IntentButtons

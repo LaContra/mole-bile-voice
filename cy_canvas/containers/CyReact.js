@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../../utils/LocalStorage'
-import { addEdge, showHideIntentProperties } from '../../common/actions'
+import { addEdge, showHideIntentProperties, selectElements } from '../../common/actions'
 import cytoscape from 'cytoscape'
 
 
@@ -65,17 +65,8 @@ const Cy = React.createClass({
     // show or hide intent info editor
     this.cy.on('select, unselect', 'node', this.showHideIntentProperties);
 
-    // TODO
-    // delete intent or edge
-    // $('body').keydown(function(event) {
-    //     if ($("input[type='text']:focus").length > 0) {
-    //         return;
-    //     }
-    //     var key = event.which || event.keyCode; // event.keyCode is used for IE8 and earlier
-    //     if (key == 8) {
-    //         this.cy.$(':selected').unselect().remove();
-    //     }
-    // })
+    this.cy.on('select, unselect', '', this.selectedElementsChanged);
+
   },
   
   dragNode: function(evt) {
@@ -128,6 +119,10 @@ const Cy = React.createClass({
     this.props.showHideIntentProperties(targetNode, type);
   },
 
+  selectedElementsChanged: function() {
+    this.props.selectElements(this.cy.$(":selected").jsons());
+  },
+
   saveToLocalStorage: function() {
     LocalStorage.saveElements([...this.cy.nodes().jsons(), ...this.cy.edges().jsons()])
   },
@@ -152,6 +147,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     showHideIntentProperties: (targetNode, nodeType) => {
       dispatch(showHideIntentProperties(targetNode, nodeType));
+    },
+    selectElements: (elements) => {
+      dispatch(selectElements(elements));
     }
   }
 }
