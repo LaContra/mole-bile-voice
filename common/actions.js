@@ -1,4 +1,5 @@
 import LocalStorage from '../utils/LocalStorage'
+import { buildIntentsDataFromCyElements } from '../cy_canvas/helper'
 
 let intentId = parseInt(LocalStorage.getElements("elementId"));
 
@@ -92,9 +93,24 @@ export const deleteElements = (elements) => {
   }
 }
 
-export const sendCreateIntentRequest = () => {
-  return {
-    type: "SEND_CREATE_INTENT_REQUEST"
+const sendCreateIntentRequest = (intents) => {
+  return (dispatch) => {
+    fetch('https://api.api.ai/v1/intents?v=20160416', {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer key'
+      }),
+      body: JSON.stringify(intents)
+    }).then((res) => {console.log(res)});
+  }
+}
+
+export const submitIntents = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const intents = buildIntentsDataFromCyElements(state.cyElements)   
+    intents.forEach(intent => dispatch(sendCreateIntentRequest(intent)))
   }
 }
 
@@ -112,8 +128,6 @@ export const changeEntityName = (entityId, name) => {
     name
   }
 }
-
-
 
 const removeEmptyValues = (entities) => {
   return entities.map(entity => {
@@ -143,11 +157,11 @@ export const submitEntities = () => {
     dispatch(cleanAndSaveLocalEntities(entities))
 
     // Send create entities request
-    fetch("https://api.api.ai/v1/entities?v=20160422", {
+    fetch('https://api.api.ai/v1/entities?v=20160422', {
       method: 'POST',
       headers: new Headers({
-        'Content-Type': "application/json",
-        'Authorization': "Bearer key"
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer key'
       }),
       body: JSON.stringify(entities)
     }).then((res) => {console.log(res)});

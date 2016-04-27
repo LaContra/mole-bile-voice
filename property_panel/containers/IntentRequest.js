@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { sendCreateIntentRequest } from '../../common/actions'
+import { submitIntents } from '../../common/actions'
 
 let IntentRequest = ({ dispatch }) => (
   <div>
     <button id="submit_btn" 
       className="btn btn-default" 
-      onClick={() => dispatch(sendCreateIntentRequest())}>Submit
+      onClick={() => dispatch(submitIntents())}>Submit
     </button>
   </div>
 )
