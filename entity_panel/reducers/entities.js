@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import LocalStorage from '../../utils/LocalStorage'
 
 const changeEntityName = (entities, entityId, name) => {
