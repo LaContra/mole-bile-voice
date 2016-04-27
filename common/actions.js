@@ -113,11 +113,47 @@ export const changeEntityName = (entityId, name) => {
   }
 }
 
-export const saveEntities = () => {
+
+
+const removeEmptyValues = (entities) => {
+  return entities.map(entity => {
+    return Object.assign({}, entity, {entries: entity.entries.filter(ref => {
+      return ref.value != "" && ref.synonyms != null && ref.synonyms.length > 0
+    })})
+  }).filter(entity => {
+    return entity.name != "" && entity.entries != null && entity.entries.length > 0
+  })
+}
+
+// Only called in this action for now
+const cleanAndSaveLocalEntities = (entities) => {
   return {
-    type: "SAVE_ENTITIES"
+    type: "CLEAN_AND_SAVE_LOCAL_ENTITIES",
+    entities
   }
 }
+
+// Async action: thunk action
+export const submitEntities = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const entities = removeEmptyValues(state.entities)
+
+    // Update entities state
+    dispatch(cleanAndSaveLocalEntities(entities))
+
+    // Send create entities request
+    fetch("https://api.api.ai/v1/entities?v=20160422", {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': "application/json",
+        'Authorization': "Bearer key"
+      }),
+      body: JSON.stringify(entities)
+    }).then((res) => {console.log(res)});
+  }
+}
+
 
 export const addReferenceEntry = (entityId) => {
   return {

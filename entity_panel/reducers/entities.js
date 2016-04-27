@@ -47,29 +47,6 @@ const changeSynonyms = (entities, entityId, refId, synonyms) => {
   })
 }
 
-const removeEmptyValues = (entities) => {
-  return entities.map(entity => {
-    return Object.assign({}, entity, {entries: entity.entries.filter(ref => {
-      return ref.value != "" && ref.synonyms != null && ref.synonyms.length > 0
-    })})
-  }).filter(entity => {
-    return entity.name != "" && entity.entries != null && entity.entries.length > 0
-  })
-}
-
-const sendCreateEntitiesRequest = (entities) => {
-  $.ajax({
-      url: "https://api.api.ai/v1/entities?v=20160422",
-      beforeSend: function (request) {
-          request.setRequestHeader("Authorization", "Bearer key");
-      },
-      type: "POST",
-      data: JSON.stringify(entities),
-      contentType: "application/json",
-      complete: function(e) { console.log(e)}
-  })
-}
-
 const entities = (state, action) => {
   if (typeof state === 'undefined') {
     const entities = LocalStorage.getElements("entities");
@@ -87,11 +64,9 @@ const entities = (state, action) => {
       }]
     case "CHANGE_ENTITY_NAME":
       return changeEntityName(state, action.entityId, action.name)
-    case "SAVE_ENTITIES":
-      const newEntities = removeEmptyValues(state)
-      LocalStorage.saveEntities(newEntities)
-      sendCreateEntitiesRequest(newEntities)
-      return newEntities
+    case "CLEAN_AND_SAVE_LOCAL_ENTITIES":
+      LocalStorage.saveEntities(action.entities)
+      return action.entities
     case "ADD_REFERENCE_ENTRY":
       return addReferenceEntry(state, action.entityId, {
         value: '',
