@@ -5,6 +5,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
+import { fetchIntents, fetchEntities } from './common/actions'
 import voiceUIApp from './common/reducers'
 import App from './common/App'
 
@@ -24,3 +25,6 @@ render(
   </Provider>,
   document.getElementById('root')
 )
+
+store.dispatch(fetchIntents())
+store.dispatch(fetchEntities())

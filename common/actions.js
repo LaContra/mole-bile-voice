@@ -93,9 +93,47 @@ export const deleteElements = (elements) => {
   }
 }
 
+const TYPE_INTENTS = 'intents'
+const TYPE_ENTITIES = 'entities'
+
+// Async action: thunk action
+const fetchAgentInfo = (type, objId) => {
+  return (dispatch) => {
+    return fetch('https://api.api.ai/v1/' + type + '/' + objId + '?v=20160416', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer key'
+      })
+    }).then((res) => console.log(res));
+  }
+}
+
+// Async action: thunk action
+const fetchAgentInfos = (type) => {
+  return (dispatch) => {
+    return fetch('https://api.api.ai/v1/' + type + '?v=20160422', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer key'
+      })
+    }).then(res => res.json())
+    .then(json => json.forEach(obj => dispatch(fetchAgentInfo(type, obj.id))));
+  }
+}
+
+export const fetchIntents = () => {
+  return fetchAgentInfos(TYPE_INTENTS)
+}
+
+export const fetchEntities = () => {
+  return fetchAgentInfos(TYPE_ENTITIES)
+}
+
 const sendCreateIntentRequest = (intents) => {
   return (dispatch) => {
-    fetch('https://api.api.ai/v1/intents?v=20160416', {
+    return fetch('https://api.api.ai/v1/intents?v=20160416', {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
@@ -106,6 +144,7 @@ const sendCreateIntentRequest = (intents) => {
   }
 }
 
+// Async action: thunk action
 export const submitIntents = () => {
   return (dispatch, getState) => {
     const state = getState()
@@ -157,7 +196,7 @@ export const submitEntities = () => {
     dispatch(cleanAndSaveLocalEntities(entities))
 
     // Send create entities request
-    fetch('https://api.api.ai/v1/entities?v=20160422', {
+    return fetch('https://api.api.ai/v1/entities?v=20160422', {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
