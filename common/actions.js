@@ -97,7 +97,7 @@ const TYPE_INTENTS = 'intents'
 const TYPE_ENTITIES = 'entities'
 
 // Async action: thunk action
-const fetchAgentInfo = (type, objId) => {
+const fetchAgentInfo = (type, objId, callback) => {
   return (dispatch) => {
     return fetch('https://api.api.ai/v1/' + type + '/' + objId + '?v=20160416', {
       method: 'GET',
@@ -105,12 +105,24 @@ const fetchAgentInfo = (type, objId) => {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer key'
       })
-    }).then((res) => console.log(res));
+    }).then(res => res.json())
+    .then((json) => {
+      console.log(json);
+      if (typeof callback != "undefined") {
+        switch(type){
+          case TYPE_ENTITIES:
+            const newObj = {name: json.name, entries: json.entries}
+            dispatch(callback(newObj))
+          default:
+            break
+        }
+      }
+    });
   }
 }
 
 // Async action: thunk action
-const fetchAgentInfos = (type) => {
+const fetchAgentInfos = (type, callback) => {
   return (dispatch) => {
     return fetch('https://api.api.ai/v1/' + type + '?v=20160422', {
       method: 'GET',
@@ -119,7 +131,14 @@ const fetchAgentInfos = (type) => {
         'Authorization': 'Bearer key'
       })
     }).then(res => res.json())
-    .then(json => json.forEach(obj => dispatch(fetchAgentInfo(type, obj.id))));
+    .then(json => json.forEach(obj => dispatch(fetchAgentInfo(type, obj.id, callback))));
+  }
+}
+
+const restoreEntity = (entity) => {
+  return {
+    type: "RESTORE_ENTITY",
+    entity
   }
 }
 
@@ -128,7 +147,7 @@ export const fetchIntents = () => {
 }
 
 export const fetchEntities = () => {
-  return fetchAgentInfos(TYPE_ENTITIES)
+  return fetchAgentInfos(TYPE_ENTITIES, restoreEntity)
 }
 
 const sendCreateIntentRequest = (intents) => {

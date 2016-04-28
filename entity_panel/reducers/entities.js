@@ -61,6 +61,8 @@ const entities = (state, action) => {
           synonyms: []
         }]
       }]
+    case "RESTORE_ENTITY":
+      return [...state, action.entity]
     case "CHANGE_ENTITY_NAME":
       return changeEntityName(state, action.entityId, action.name)
     case "CLEAN_AND_SAVE_LOCAL_ENTITIES":
