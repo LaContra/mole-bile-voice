@@ -143,22 +143,8 @@ export const buildIntentsDataFromCyElements = (elements) => {
     return []
   }
 
-  let intents = getIntents(elements)
-
-  return intents.map(assignIntentName).map(i => assignInOutEdges(i, elements))
+  const intents = getIntents(elements).map(assignIntentName)
+  
+  return intents.map(i => assignInOutEdges(i, elements))
         .map(i => assignContextName(i, intents)).map(buildApiData)
 }
-
-// const sendCreateIntentRequest = (intentData) => {
-//   $.ajax({
-//       url: "https://api.api.ai/v1/intents?v=20160416",
-//       beforeSend: function (request) {
-//           request.setRequestHeader("Authorization", "Bearer key");
-//       },
-//       type: "POST",
-//       data: JSON.stringify(intentData),
-//       contentType: "application/json",
-//       complete: function(e) { console.log(e)}
-//   })
-//   // console.log(intentData)
-// }
