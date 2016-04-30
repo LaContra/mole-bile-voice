@@ -46,12 +46,7 @@ const changeSynonyms = (entities, entityId, refId, synonyms) => {
   })
 }
 
-const entities = (state, action) => {
-  if (typeof state === 'undefined') {
-    const entities = LocalStorage.getElements("entities");
-    return entities == null? []: entities
-  }
-
+const entities = (state = [], action) => {
   switch(action.type) {
     case "ADD_ENTITY":
       return [...state, {

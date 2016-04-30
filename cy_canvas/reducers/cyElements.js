@@ -1,15 +1,9 @@
-import LocalStorage from '../../utils/LocalStorage'
 import { unselectElement, getEdgesBetween,
   filterEdgeOut, modifyElement, getId,
   filterNode, getSourceId, getTargetId
 } from '../helper'
 
-const cyElements = (state, action) => {
-  if (typeof state === 'undefined') {
-    const localState = LocalStorage.getElements();
-    return localState == null? []: localState
-  }
-
+const cyElements = (state = [], action) => {
   switch(action.type) {
     /* panel control */
     case 'CLEAR_INTENTS':
