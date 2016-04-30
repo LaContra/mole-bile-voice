@@ -70,10 +70,12 @@ const getIntents = (elements) => {
   return elements.filter(filterNodeUserSays).map(userSaysNode => {
     const responseNodeId = elements.filter(e => filterEdgeOut(e, userSaysNode.data.id)).map(getTargetId)[0]
     const responseNode = elements.filter(e => e.data.id == responseNodeId)[0]
+    const edge = elements.filter(e => filterEdgeOut(e, userSaysNode.data.id) && filterEdgeIn(e, responseNodeId))[0]
 
     return {
       userSaysId: userSaysNode.data.id,
       responseId: responseNodeId,
+      edgeId: getId(edge),
       userSayses: userSaysNode.data.user_says.split("\n"),
       responses: responseNode.data.response.split("\n"),
       action: responseNode.data.action,
@@ -83,7 +85,7 @@ const getIntents = (elements) => {
 
 const assignIntentName = (intent) => {
   return Object.assign({}, intent, {
-    name: `${intent.userSaysId}: ${intent.userSayses[0]}+${intent.responses[0]}`,
+    name: `${intent.userSaysId}:${intent.userSayses[0]}+${intent.edgeId}:e+${intent.responseId}:${intent.responses[0]}`,
   })
 }
 
@@ -97,23 +99,24 @@ const assignInOutEdges = (intent, elements) => {
 const getSourceIntent = (edge, intents) => {
   return intents.filter(intent => 
     intent.responseId == edge.data.source
-  )[0]
+  ).map(intent => Object.assign({}, intent, {edge: edge}))[0]
 }
 
 const getTargetIntent = (edge, intents) => {
   return intents.filter(intent =>
     intent.userSaysId == edge.data.target
-  )[0]
+  ).map(intent => Object.assign({}, intent, {edge: edge}))[0]
 }
 
-const getContextName = (fromIntent, toIntent) => {
-  return `${fromIntent.name}_${toIntent.name}`.replace(/ /g, '')
+const getContextName = (fromIntent, toIntent, contextType) => {
+  let intentWithEdge = contextType == "incoming" ? fromIntent : toIntent
+  return `${intentWithEdge.edge.data.id}_${fromIntent.name}_${toIntent.name}`.replace(/ /g, '')
 }
 
 const assignContextName = (intent, intents) => {
   return Object.assign({}, intent, {
-    contextsIn: intent.edgesIn.map(e => getSourceIntent(e, intents)).map(i => getContextName(i, intent)),
-    contextsOut: intent.edgesOut.map(e => getTargetIntent(e, intents)).map(i => getContextName(intent, i)),
+    contextsIn: intent.edgesIn.map(e => getSourceIntent(e, intents)).map(i => getContextName(i, intent, "incoming")),
+    contextsOut: intent.edgesOut.map(e => getTargetIntent(e, intents)).map(i => getContextName(intent, i, "outgoing")),
   })
 }
 
@@ -144,7 +147,6 @@ export const buildIntentsDataFromCyElements = (elements) => {
   }
 
   const intents = getIntents(elements).map(assignIntentName)
-  
   return intents.map(i => assignInOutEdges(i, elements))
         .map(i => assignContextName(i, intents)).map(buildApiData)
 }

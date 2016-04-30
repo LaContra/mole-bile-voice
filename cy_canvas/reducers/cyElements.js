@@ -36,6 +36,8 @@ const cyElements = (state, action) => {
       ]
       // TODO: position
       // position: { x: -this.state.cy.viewport().pan().x / this.state.cy.zoom() + 40, y: -this.state.cy.viewport().pan().y / this.state.cy.zoom() + 40 }
+    case 'ADD_INTENT_WITH_DATA':
+      return state.concat(action.intent)
 
     case 'ADD_USER_SAYS':
       return [ ...state.map(t => unselectElement(t)), {

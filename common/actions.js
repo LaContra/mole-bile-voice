@@ -16,6 +16,13 @@ export const addIntent = () => {
   }
 }
 
+const addIntentWithData = (intent) => {
+  return {
+    type: "ADD_INTENT_WITH_DATA",
+    intent
+  }
+}
+
 export const addUserSays = () => {
   return {
     type: "ADD_USER_SAYS",
@@ -110,9 +117,13 @@ const fetchAgentInfo = (type, objId, callback) => {
       console.log(json);
       if (typeof callback != "undefined") {
         switch(type){
+          case TYPE_INTENTS:
+            dispatch(callback(json))
+            break;
           case TYPE_ENTITIES:
             const newObj = {name: json.name, entries: json.entries}
             dispatch(callback(newObj))
+            break;
           default:
             break
         }
@@ -142,8 +153,159 @@ const restoreEntity = (entity) => {
   }
 }
 
+const createContextEdges = (contexts, contextType) => {
+  const edges = []
+  for (let i = 0 ; i < contexts.length ; i++) {
+    // Contexnt name example: "9_1:u1+3:e+2:r1_6:u3+8:e+7:r2" => contextEdgeId_intent1_intent2
+    const potentialContextIds = contextType == 'incoming' ? contexts[i].split('_') : contexts[i].name.split('_')
+    const contextSourceId = parseInt(potentialContextIds[1].split('+')[2].split(':')[0]) // responseId of intent1
+    const contextTargetId = parseInt(potentialContextIds[2].split('+')[0].split(':')[0]) // userSaysId of intent2
+
+    // Insert context edges
+    edges.push({
+      group: "edges",
+      data: {
+        source: contextSourceId,
+        target: contextTargetId,
+        id: parseInt(potentialContextIds[0])},
+      classes: "r2us",
+    })
+  }
+
+  return edges
+}
+
+const buildCyIntent = (intent) => {
+// {  
+//    "id":"d8a056c9-829f-4852-a68e-26e52c08b2dc",
+//    "name":"40: u2+r1",
+//    "auto":false,
+//    "contexts":[  
+
+//    ],
+//    "templates":[  
+//       "u22",
+//       "u2"
+//    ],
+//    "userSays":[  
+//       {  
+//          "data":[  
+//             {  
+//                "text":"u2"
+//             }
+//          ],
+//          "isTemplate":true,
+//          "count":0,
+//          "created":-1
+//       },
+//       {  
+//          "data":[  
+//             {  
+//                "text":"u22"
+//             }
+//          ],
+//          "isTemplate":false,
+//          "count":0,
+//          "created":-1
+//       }
+//    ],
+//    "responses":[  
+//       {  
+//          "resetContexts":false,
+//          "action":"a1",
+//          "affectedContexts":[  
+//             {  
+//                "name":"40:u2+r1_36:u3+r2",
+//                "parameters":{  
+
+//                }
+//             },
+//             {  
+//                "name":"40:u2+r1_42:u4+r2",
+//                "parameters":{  
+
+//                }
+//             }
+//          ],
+//          "parameters":[  
+
+//          ],
+//          "speech":[  
+//             "r1",
+//             "r11"
+//          ]
+//       }
+//    ],
+//    "state":"LOADED",
+//    "priority":500000,
+//    "webhookUsed":false
+// }
+
+  // Intent name: 1:u1+3:e+2:r1 => userSaysId:text + edgeId:e + responseId:text
+  const potentialIds = intent.name.split('+')
+  const cyNodeIds = potentialIds.map(item => parseInt(item.split(':')[0]))
+  const response = intent.responses[0] 
+  const sppech = (response.speech instanceof Array) ? response.speech.join('\n'): response.speech
+
+  let cyIntentNodes = [
+    // Intent
+    {
+      group: "nodes",
+      data: { user_says: intent.templates.join('\n'), id: cyNodeIds[0] },
+      classes: "user_says",
+      position: {x: 100, y: 100},
+    },
+    {
+      group: "nodes",
+      data: { response: sppech, id: cyNodeIds[2], action: response.action },
+      classes: "response",
+      position: {x: 140, y: 100},
+    },
+    {
+      group: "edges",
+      data: {source: cyNodeIds[0], target: cyNodeIds[2], id: cyNodeIds[1]},
+      classes: "us2r",
+    }
+  ]
+
+  // Context
+  const incomingContexts = intent.contexts
+  const outgoingContexts = intent.responses[0].affectedContexts
+  cyIntentNodes = cyIntentNodes.concat(createContextEdges(incomingContexts, "incoming"), createContextEdges(outgoingContexts, "outgoing"))
+
+  return cyIntentNodes
+
+  // {
+  //   group: "nodes",
+  //   data: { user_says: "", id: action.id },
+  //   classes: "user_says",
+  //   position: {x: 100, y: 100},
+  // },
+  // {
+  //   group: "nodes",
+  //   data: { response: "", id: action.id+1, action: "" },
+  //   classes: "response",
+  //   position: {x: 140, y: 100},
+  // },
+  // {
+  //   group: "edges",
+  //   data: {source: action.id, target: action.id+1, id: action.id+2},
+  //   classes: "us2r",
+  // }
+}
+
+const restoreIntent = (intent) => {
+  return (dispatch) => {
+    // Format transformation: from api.ai to cy
+    const cyIntent = buildCyIntent(intent)
+    console.log("cyIntent")
+    console.log(cyIntent)
+    dispatch(addIntentWithData(cyIntent))
+  }
+}
+
 export const fetchIntents = () => {
-  return fetchAgentInfos(TYPE_INTENTS)
+  return fetchAgentInfos(TYPE_INTENTS, restoreIntent)
 }
 
 export const fetchEntities = () => {
