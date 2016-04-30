@@ -38,7 +38,21 @@ var LocalStorage = React.createClass({
       else {
         return localStorage.getItem(key)
       }
+    },
+
+    saveKeys: function(devKey, clientKey) {
+      localStorage.setItem("devKey", devKey);
+      localStorage.setItem("clientKey", clientKey);
+    },
+
+    getDevKey: function() {
+      return localStorage.getItem("devKey")
+    },
+
+    getClientKey: function() {
+      return localStorage.getItem("clientKey")
     }
+
   },
   render: function(){}
 });

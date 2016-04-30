@@ -2,6 +2,7 @@ import LocalStorage from '../utils/LocalStorage'
 import { buildIntentsDataFromCyElements } from '../cy_canvas/helper'
 
 let intentId = parseInt(LocalStorage.getElements("elementId"));
+const devKey = LocalStorage.getDevKey();
 
 export const clearIntents = () => {
   return {
@@ -110,7 +111,7 @@ const fetchAgentInfo = (type, objId, callback) => {
       method: 'GET',
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer key'
+        'Authorization': 'Bearer ' + devKey
       })
     }).then(res => res.json())
     .then((json) => {
@@ -139,7 +140,7 @@ const fetchAgentInfos = (type, callback) => {
       method: 'GET',
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer key'
+        'Authorization': 'Bearer ' + devKey
       })
     }).then(res => res.json())
     .then(json => json.forEach(obj => dispatch(fetchAgentInfo(type, obj.id, callback))));
@@ -318,7 +319,7 @@ const sendCreateIntentRequest = (intents) => {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer key'
+        'Authorization': 'Bearer ' + devKey
       }),
       body: JSON.stringify(intents)
     }).then((res) => {console.log(res)});
@@ -381,7 +382,7 @@ export const submitEntities = () => {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer key'
+        'Authorization': 'Bearer ' + devKey
       }),
       body: JSON.stringify(entities)
     }).then((res) => {console.log(res)});
@@ -411,5 +412,26 @@ export const changeSynonyms = (entityId, refId, synonyms) => {
     entityId,
     refId,
     synonyms
+  }
+}
+
+// API Keys
+export const changeDevKey = (key) => {
+  return {
+    type: "CHANGE_DEV_KEY",
+    key
+  }
+}
+
+export const changeClientKey = (key) => {
+  return {
+    type: "CHANGE_CLIENT_KEY",
+    keyƒ
+  }
+}
+
+export const saveKeys = () => {
+  return {
+    type: "SAVE_KEYS"
   }
 }
