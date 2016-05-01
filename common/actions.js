@@ -2,7 +2,6 @@ import LocalStorage from '../utils/LocalStorage'
 import { buildIntentsDataFromCyElements } from '../cy_canvas/helper'
 
 let intentId = parseInt(LocalStorage.getElements("elementId"));
-const devKey = LocalStorage.getDevKey();
 
 export const clearIntents = () => {
   return {
@@ -111,7 +110,7 @@ const fetchAgentInfo = (type, objId, callback) => {
       method: 'GET',
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + devKey
+        'Authorization': 'Bearer ' + LocalStorage.getDevKey()
       })
     }).then(res => res.json())
     .then((json) => {
@@ -140,7 +139,7 @@ const fetchAgentInfos = (type, callback) => {
       method: 'GET',
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + devKey
+        'Authorization': 'Bearer ' + LocalStorage.getDevKey()
       })
     }).then(res => res.json())
     .then(json => json.forEach(obj => dispatch(fetchAgentInfo(type, obj.id, callback))));
@@ -246,7 +245,7 @@ const buildCyIntent = (intent) => {
   const potentialIds = intent.name.split('+')
   const cyNodeIds = potentialIds.map(item => parseInt(item.split(':')[0]))
   const response = intent.responses[0] 
-  const sppech = (response.speech instanceof Array) ? response.speech.join('\n'): response.speech
+  const speech = (response.speech instanceof Array) ? response.speech.join('\n'): response.speech
 
   let cyIntentNodes = [
     // Intent
@@ -258,7 +257,7 @@ const buildCyIntent = (intent) => {
     },
     {
       group: "nodes",
-      data: { response: sppech, id: cyNodeIds[2], action: response.action },
+      data: { response: speech, id: cyNodeIds[2], action: response.action },
       classes: "response",
       position: {x: 140, y: 100},
     },
@@ -319,7 +318,7 @@ const sendCreateIntentRequest = (intents) => {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + devKey
+        'Authorization': 'Bearer ' + LocalStorage.getDevKey()
       }),
       body: JSON.stringify(intents)
     }).then((res) => {console.log(res)});
@@ -382,7 +381,7 @@ export const submitEntities = () => {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + devKey
+        'Authorization': 'Bearer ' + LocalStorage.getDevKey()
       }),
       body: JSON.stringify(entities)
     }).then((res) => {console.log(res)});
@@ -426,7 +425,7 @@ export const changeDevKey = (key) => {
 export const changeClientKey = (key) => {
   return {
     type: "CHANGE_CLIENT_KEY",
-    keyƒ
+    key
   }
 }
 
