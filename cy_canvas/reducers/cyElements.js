@@ -42,6 +42,15 @@ const cyElements = (state = [], action) => {
         }
       ]
 
+    case 'ADD_RESPONSE':
+      return [ ...state.map(t => unselectElement(t)), {
+          group: "nodes",
+          data: { response: "", id: action.id, action: "" },
+          classes: "response",
+          position: {x: 100, y: 100},
+        }
+      ]
+
     case 'ADD_EDGE':
       // FIXME: temporarily avoid cycle in one intent
       if (getEdgesBetween(action.target, action.source, state).length > 0) {

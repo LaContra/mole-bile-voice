@@ -30,6 +30,13 @@ export const addUserSays = () => {
   }
 }
 
+export const addResponse = () => {
+  return {
+    type: "ADD_RESPONSE",
+    id: intentId++
+  }
+}
+
 export const addEdge = (source, target, edgeType) => {
   return {
     type: "ADD_EDGE",
