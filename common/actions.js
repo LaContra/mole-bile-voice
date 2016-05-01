@@ -1,4 +1,5 @@
 import LocalStorage from '../utils/LocalStorage'
+import { buildIntentsDataFromCyElements } from '../cy_canvas/helper'
 
 let intentId = parseInt(LocalStorage.getElements("elementId"));
 
@@ -12,6 +13,13 @@ export const addIntent = () => {
   return {
     type: "ADD_INTENT",
     id: (intentId+=3)-3
+  }
+}
+
+const addIntentWithData = (intent) => {
+  return {
+    type: "ADD_INTENT_WITH_DATA",
+    intent
   }
 }
 
@@ -92,9 +100,237 @@ export const deleteElements = (elements) => {
   }
 }
 
-export const sendCreateIntentRequest = () => {
+const TYPE_INTENTS = 'intents'
+const TYPE_ENTITIES = 'entities'
+
+// Async action: thunk action
+const fetchAgentInfo = (type, objId, callback) => {
+  return (dispatch) => {
+    return fetch('https://api.api.ai/v1/' + type + '/' + objId + '?v=20160416', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + LocalStorage.getDevKey()
+      })
+    }).then(res => res.json())
+    .then((json) => {
+      console.log(json);
+      if (typeof callback != "undefined") {
+        switch(type){
+          case TYPE_INTENTS:
+            dispatch(callback(json))
+            break;
+          case TYPE_ENTITIES:
+            const newObj = {name: json.name, entries: json.entries}
+            dispatch(callback(newObj))
+            break;
+          default:
+            break
+        }
+      }
+    });
+  }
+}
+
+// Async action: thunk action
+const fetchAgentInfos = (type, callback) => {
+  return (dispatch) => {
+    return fetch('https://api.api.ai/v1/' + type + '?v=20160422', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + LocalStorage.getDevKey()
+      })
+    }).then(res => res.json())
+    .then(json => json.forEach(obj => dispatch(fetchAgentInfo(type, obj.id, callback))));
+  }
+}
+
+const restoreEntity = (entity) => {
   return {
-    type: "SEND_CREATE_INTENT_REQUEST"
+    type: "RESTORE_ENTITY",
+    entity
+  }
+}
+
+const createContextEdges = (contexts, contextType) => {
+  const edges = []
+  for (let i = 0 ; i < contexts.length ; i++) {
+    // Contexnt name example: "9_1:u1+3:e+2:r1_6:u3+8:e+7:r2" => contextEdgeId_intent1_intent2
+    const potentialContextIds = contextType == 'incoming' ? contexts[i].split('_') : contexts[i].name.split('_')
+    const contextSourceId = parseInt(potentialContextIds[1].split('+')[2].split(':')[0]) // responseId of intent1
+    const contextTargetId = parseInt(potentialContextIds[2].split('+')[0].split(':')[0]) // userSaysId of intent2
+
+    // Insert context edges
+    edges.push({
+      group: "edges",
+      data: {
+        source: contextSourceId,
+        target: contextTargetId,
+        id: parseInt(potentialContextIds[0])},
+      classes: "r2us",
+    })
+  }
+
+  return edges
+}
+
+const buildCyIntent = (intent) => {
+// {  
+//    "id":"d8a056c9-829f-4852-a68e-26e52c08b2dc",
+//    "name":"40: u2+r1",
+//    "auto":false,
+//    "contexts":[  
+
+//    ],
+//    "templates":[  
+//       "u22",
+//       "u2"
+//    ],
+//    "userSays":[  
+//       {  
+//          "data":[  
+//             {  
+//                "text":"u2"
+//             }
+//          ],
+//          "isTemplate":true,
+//          "count":0,
+//          "created":-1
+//       },
+//       {  
+//          "data":[  
+//             {  
+//                "text":"u22"
+//             }
+//          ],
+//          "isTemplate":false,
+//          "count":0,
+//          "created":-1
+//       }
+//    ],
+//    "responses":[  
+//       {  
+//          "resetContexts":false,
+//          "action":"a1",
+//          "affectedContexts":[  
+//             {  
+//                "name":"40:u2+r1_36:u3+r2",
+//                "parameters":{  
+
+//                }
+//             },
+//             {  
+//                "name":"40:u2+r1_42:u4+r2",
+//                "parameters":{  
+
+//                }
+//             }
+//          ],
+//          "parameters":[  
+
+//          ],
+//          "speech":[  
+//             "r1",
+//             "r11"
+//          ]
+//       }
+//    ],
+//    "state":"LOADED",
+//    "priority":500000,
+//    "webhookUsed":false
+// }
+
+  // Intent name: 1:u1+3:e+2:r1 => userSaysId:text + edgeId:e + responseId:text
+  const potentialIds = intent.name.split('+')
+  const cyNodeIds = potentialIds.map(item => parseInt(item.split(':')[0]))
+  const response = intent.responses[0] 
+  const speech = (response.speech instanceof Array) ? response.speech.join('\n'): response.speech
+
+  let cyIntentNodes = [
+    // Intent
+    {
+      group: "nodes",
+      data: { user_says: intent.templates.join('\n'), id: cyNodeIds[0] },
+      classes: "user_says",
+      position: {x: 100, y: 100},
+    },
+    {
+      group: "nodes",
+      data: { response: speech, id: cyNodeIds[2], action: response.action },
+      classes: "response",
+      position: {x: 140, y: 100},
+    },
+    {
+      group: "edges",
+      data: {source: cyNodeIds[0], target: cyNodeIds[2], id: cyNodeIds[1]},
+      classes: "us2r",
+    }
+  ]
+
+  // Context
+  const incomingContexts = intent.contexts
+  const outgoingContexts = intent.responses[0].affectedContexts
+  cyIntentNodes = cyIntentNodes.concat(createContextEdges(incomingContexts, "incoming"), createContextEdges(outgoingContexts, "outgoing"))
+
+  return cyIntentNodes
+
+  // {
+  //   group: "nodes",
+  //   data: { user_says: "", id: action.id },
+  //   classes: "user_says",
+  //   position: {x: 100, y: 100},
+  // },
+  // {
+  //   group: "nodes",
+  //   data: { response: "", id: action.id+1, action: "" },
+  //   classes: "response",
+  //   position: {x: 140, y: 100},
+  // },
+  // {
+  //   group: "edges",
+  //   data: {source: action.id, target: action.id+1, id: action.id+2},
+  //   classes: "us2r",
+  // }
+}
+
+const restoreIntent = (intent) => {
+  return (dispatch) => {
+    // Format transformation: from api.ai to cy
+    const cyIntent = buildCyIntent(intent)
+    console.log("cyIntent")
+    console.log(cyIntent)
+    dispatch(addIntentWithData(cyIntent))
+  }
+}
+
+export const fetchIntents = () => {
+  return fetchAgentInfos(TYPE_INTENTS, restoreIntent)
+}
+
+export const fetchEntities = () => {
+  return fetchAgentInfos(TYPE_ENTITIES, restoreEntity)
+}
+
+const sendCreateIntentRequest = (intents) => {
+  return (dispatch) => {
+    return fetch('https://api.api.ai/v1/intents?v=20160416', {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + LocalStorage.getDevKey()
+      }),
+      body: JSON.stringify(intents)
+    }).then((res) => {console.log(res)});
+  }
+}
+
+// Async action: thunk action
+export const submitIntents = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const intents = buildIntentsDataFromCyElements(state.cyElements)   
+    intents.forEach(intent => dispatch(sendCreateIntentRequest(intent)))
   }
 }
 
@@ -113,11 +349,45 @@ export const changeEntityName = (entityId, name) => {
   }
 }
 
-export const saveEntities = () => {
+const removeEmptyValues = (entities) => {
+  return entities.map(entity => {
+    return Object.assign({}, entity, {entries: entity.entries.filter(ref => {
+      return ref.value != "" && ref.synonyms != null && ref.synonyms.length > 0
+    })})
+  }).filter(entity => {
+    return entity.name != "" && entity.entries != null && entity.entries.length > 0
+  })
+}
+
+// Only called in this action for now
+const cleanAndSaveLocalEntities = (entities) => {
   return {
-    type: "SAVE_ENTITIES"
+    type: "CLEAN_AND_SAVE_LOCAL_ENTITIES",
+    entities
   }
 }
+
+// Async action: thunk action
+export const submitEntities = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const entities = removeEmptyValues(state.entities)
+
+    // Update entities state
+    dispatch(cleanAndSaveLocalEntities(entities))
+
+    // Send create entities request
+    return fetch('https://api.api.ai/v1/entities?v=20160422', {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + LocalStorage.getDevKey()
+      }),
+      body: JSON.stringify(entities)
+    }).then((res) => {console.log(res)});
+  }
+}
+
 
 export const addReferenceEntry = (entityId) => {
   return {
@@ -141,5 +411,26 @@ export const changeSynonyms = (entityId, refId, synonyms) => {
     entityId,
     refId,
     synonyms
+  }
+}
+
+// API Keys
+export const changeDevKey = (key) => {
+  return {
+    type: "CHANGE_DEV_KEY",
+    key
+  }
+}
+
+export const changeClientKey = (key) => {
+  return {
+    type: "CHANGE_CLIENT_KEY",
+    key
+  }
+}
+
+export const saveKeys = () => {
+  return {
+    type: "SAVE_KEYS"
   }
 }

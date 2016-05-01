@@ -3,6 +3,8 @@ import IntentControl from '../containers/IntentControl'
 import UserSaysPropertyControl from '../containers/UserSaysPropertyControl'
 import ResponsePropertyControl from '../containers/ResponsePropertyControl'
 import IntentRequest from '../containers/IntentRequest'
+import APIKeySection from '../containers/APIKeySection'
+
 
 const Panel = () => (
   <div className="base_panel">
@@ -10,6 +12,7 @@ const Panel = () => (
     <UserSaysPropertyControl />
     <ResponsePropertyControl />
     <IntentRequest />
+    <APIKeySection />
   </div>
 )
 
