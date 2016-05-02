@@ -3,7 +3,26 @@ import { unselectElement, getEdgesBetween,
   filterNode, getSourceId, getTargetId
 } from '../helper'
 
+Array.prototype.average = function() {
+  var sum = this.reduce(function(result, currentValue) {
+    return result + parseInt(currentValue)
+  }, 0);
+  if (this.length == 0) {
+    return 0
+  }
+  return sum / this.length;
+};
+
+const getAvgPos = (elements) => {
+  const nodes = elements.filter(filterNode)
+  return {
+    x: nodes.map(n => n.position.x).average(),
+    y: nodes.map(n => n.position.y).average(),
+  }
+}
 const cyElements = (state = [], action) => {
+  const avgPos = getAvgPos(state)
+
   switch(action.type) {
     /* panel control */
     case 'CLEAR_INTENTS':
@@ -14,13 +33,13 @@ const cyElements = (state = [], action) => {
           group: "nodes",
           data: { user_says: "", id: action.id },
           classes: "user_says",
-          position: {x: 100, y: 100},
+          position: avgPos, 
         },
         {
           group: "nodes",
           data: { response: "", id: action.id+1, action: "" },
           classes: "response",
-          position: {x: 140, y: 100},
+          position: { x: avgPos.x, y: avgPos.y+50 },
         },
         {
           group: "edges",
@@ -38,7 +57,7 @@ const cyElements = (state = [], action) => {
           group: "nodes",
           data: { user_says: "", id: action.id },
           classes: "user_says",
-          position: {x: 100, y: 100},
+          position: avgPos, 
         }
       ]
 
@@ -47,7 +66,7 @@ const cyElements = (state = [], action) => {
           group: "nodes",
           data: { response: "", id: action.id, action: "" },
           classes: "response",
-          position: {x: 100, y: 100},
+          position: avgPos, 
         }
       ]
 
