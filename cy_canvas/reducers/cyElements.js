@@ -20,6 +20,126 @@ const getAvgPos = (elements) => {
     y: nodes.map(n => n.position.y).average(),
   }
 }
+
+const getConversationComponent = (type, id, position) => {
+  switch(type) {
+    case 0:
+      return [{
+        group: "nodes",
+        data: { response: "welcome!", id: id },
+        classes: "response",
+        // position: {x: 100, y: 100}
+      }]
+    case 1:
+      return [{
+        group: "nodes",
+        data: { response: "Do you want to ...?", id: id },
+        classes: "response",
+        position: position,
+        selected: true,
+      }, {
+        group: "nodes",
+        data: { user_says: "Yes", id: id+1 },
+        classes: "user_says",
+        position: { x: position.x-25, y: position.y+50 },
+        selected: true,
+      }, {
+        group: "nodes",
+        data: { user_says: "No", id: id+2 },
+        classes: "user_says",
+        position: { x: position.x+25, y: position.y+50 },
+        selected: true,
+      }, {
+        group: "edges",
+        data: {source: id, target: id+1, id: id+3},
+        classes: "r2us",
+      }, {
+        group: "edges",
+        data: {source: id, target: id+2, id: id+4},
+        classes: "r2us",
+      }]
+
+    case 2:
+      return [{
+        group: "nodes",
+        data: { response: "What's your address?", id: id },
+        classes: "response",
+        position: position,
+        selected: true,
+      }, {
+        group: "nodes",
+        data: { user_says: "@sys.address:address", id: id+1 },
+        classes: "user_says",
+        position: { x: position.x, y: position.y+50 },
+        selected: true,
+      }, {
+        group: "nodes",
+        data: { response: "Did you say $address ?", id: id+2 },
+        classes: "response",
+        position: { x: position.x, y: position.y+100 },
+        selected: true,
+      }, {
+        group: "nodes",
+        data: { user_says: "Yes", id: id+3 },
+        classes: "user_says",
+        position: { x: position.x-25, y: position.y+150 },
+        selected: true,
+      }, {
+        group: "nodes",
+        data: { user_says: "No", id: id+4 },
+        classes: "user_says",
+        position: { x: position.x+25, y: position.y+150 },
+        selected: true,
+      }, {
+        group: "edges",
+        data: {source: id, target: id+1, id: id+5},
+        classes: "r2us",
+      }, {
+        group: "edges",
+        data: {source: id+1, target: id+2, id: id+6},
+        classes: "us2r",
+      }, {
+        group: "edges",
+        data: {source: id+2, target: id+3, id: id+7},
+        classes: "r2us",
+      }, {
+        group: "edges",
+        data: {source: id+2, target: id+4, id: id+8},
+        classes: "r2us",
+      }]
+
+    case 3:
+      return [{
+        group: "nodes",
+        data: { response: "Do you want A or B?", id: id },
+        classes: "response",
+        position: position,
+        selected: true,
+      }, {
+        group: "nodes",
+        data: { user_says: "A", id: id+1 },
+        classes: "user_says",
+        position: { x: position.x-25, y: position.y+50 },
+        selected: true,
+      }, {
+        group: "nodes",
+        data: { user_says: "B", id: id+2 },
+        classes: "user_says",
+        position: { x: position.x+25, y: position.y+50 },
+        selected: true,
+      }, {
+        group: "edges",
+        data: {source: id, target: id+1, id: id+3},
+        classes: "r2us",
+      }, {
+        group: "edges",
+        data: {source: id, target: id+2, id: id+4},
+        classes: "r2us",
+      }]
+  }
+}
+
+
 const cyElements = (state = [], action) => {
   const avgPos = getAvgPos(state)
 
@@ -69,6 +189,9 @@ const cyElements = (state = [], action) => {
           position: avgPos, 
         }
       ]
+
+    case 'ADD_CONVERSATION_COMPONENT':
+      return [...state.map(unselectElement), ...getConversationComponent(action.cType, action.id, avgPos)]
 
     case 'ADD_EDGE':
       // FIXME: temporarily avoid cycle in one intent

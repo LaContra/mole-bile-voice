@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { clearIntents, addIntent, addUserSays, addResponse, deleteElements } from '../../common/actions'
+import { clearIntents, addIntent, addUserSays, addResponse, deleteElements, addConversationComponent } from '../../common/actions'
 import IntentButtons from '../components/IntentButtons'
 
 const mapStateToProps = (state) => { 
@@ -27,6 +27,9 @@ const mapDispatchToProps = (dispatch) => {
     onDeleteClick: (elements) => {
       dispatch(deleteElements(elements))
     },
+    onAddConversationComponent: (cType) => {
+      dispatch(addConversationComponent(cType))
+    }
   }
 }
 
