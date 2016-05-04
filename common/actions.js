@@ -30,6 +30,21 @@ export const addUserSays = () => {
   }
 }
 
+export const addResponse = () => {
+  return {
+    type: "ADD_RESPONSE",
+    id: intentId++
+  }
+}
+
+export const addConversationComponent = (cType) => {
+  return {
+    type: "ADD_CONVERSATION_COMPONENT",
+    id: (intentId+=10)-10,
+    cType: cType,
+  }
+}
+
 export const addEdge = (source, target, edgeType) => {
   return {
     type: "ADD_EDGE",

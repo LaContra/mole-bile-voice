@@ -110,7 +110,7 @@ const getTargetIntent = (edge, intents) => {
 
 const getContextName = (fromIntent, toIntent, contextType) => {
   let intentWithEdge = contextType == "incoming" ? fromIntent : toIntent
-  return `${intentWithEdge.edge.data.id}_${fromIntent.name}_${toIntent.name}`.replace(/ /g, '')
+  return `${intentWithEdge.edge.data.id}_${fromIntent.name}_${toIntent.name}`.replace(/[ .]/g, '')
 }
 
 const assignContextName = (intent, intents) => {
