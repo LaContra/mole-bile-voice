@@ -6,14 +6,15 @@ const ResponseProperty = ({ panel, onSaveResponsePropertiesClick, onResponseChan
     hidden={ panel.hideProperty }
     onSubmit={e => {
       e.preventDefault(); 
-      onSaveResponsePropertiesClick(panel.selectedNode, e.target.response.value, e.target.action.value);
+      onSaveResponsePropertiesClick(panel.selectedNode, e.target.response.value.replace(/;/g, "\n"), e.target.action.value);
     }} >
     <label>Response</label>
-    <textarea 
+    <input 
       className="form-control" 
       name="response" 
-      rows={ panel.text.split("\n").length }
-      value={ panel.text }
+      placeholder="response"
+      // rows={ panel.text.split("\n").length }
+      value={ panel.text.replace(/\n/g, ";") }
       onChange={e => onResponseChange(e.target.value)} />
     <label>Action</label>
     <input type="text"
