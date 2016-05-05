@@ -154,12 +154,14 @@ const cyElements = (state = [], action) => {
           data: { user_says: "", id: action.id },
           classes: "user_says",
           position: avgPos, 
+          selected: true,
         },
         {
           group: "nodes",
           data: { response: "", id: action.id+1, action: "" },
           classes: "response",
           position: { x: avgPos.x, y: avgPos.y+50 },
+          selected: true,
         },
         {
           group: "edges",
@@ -178,6 +180,7 @@ const cyElements = (state = [], action) => {
           data: { user_says: "", id: action.id },
           classes: "user_says",
           position: avgPos, 
+          selected: true,
         }
       ]
 
@@ -187,6 +190,7 @@ const cyElements = (state = [], action) => {
           data: { response: "", id: action.id, action: "" },
           classes: "response",
           position: avgPos, 
+          selected: true,
         }
       ]
 
