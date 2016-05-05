@@ -6,7 +6,6 @@ const DefaultVisualStyle = [
       'text-halign': 'center',
       'color': 'white',
       'text-outline-width': 2,
-      'text-outline-color': '#888',
       'text-wrap': 'wrap',
       'text-max-width': '1000px',
     }
@@ -15,7 +14,9 @@ const DefaultVisualStyle = [
     selector: 'node.user_says',
     css: {
       'label': 'data(user_says)',
-      'shape': 'triangle',
+      'shape': 'rectangle',
+      'background-color': 'yellow',
+      'text-outline-color': 'yellow',
     }
   }, 
   {
@@ -23,6 +24,8 @@ const DefaultVisualStyle = [
     css: {
       'label': 'data(response)',
       'shape': 'rectangle',
+      'background-color': 'blue',
+      'text-outline-color': 'blue',
     }
   }, 
   {
