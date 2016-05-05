@@ -204,25 +204,29 @@ const cyElements = (state = [], action) => {
       if (sourceClass == "user_says" && targetClass == "response") {
         edgeType = "us2r"
       }
-      else if  (sourceClass == "response" && targetClass == "user_says") {
+      else if (sourceClass == "response" && targetClass == "user_says") {
         edgeType = "r2us"
       }
+      else if (sourceClass == "user_says" && targetClass == "user_says") {
+        alert("Oops! Can’t connect two user says together. Try connecting a user says to a response instead.")
+        return state.map(t => unselectElement(t))
+      }
       else {
-        alert("I can't be with you I'm straight :(")
+        alert("Uh-oh… Can’t connect two responses together. Try connecting a response to a user says instead.")
         return state.map(t => unselectElement(t))
       }
       // avoid cycle in one intent
       if (getEdgesBetween(action.target, action.source, state).length > 0) {
-        alert("don't make cycle!!!")
+        alert("Uh-oh… The doggie is chasing its tail! Sorry we can’t handle cycle connections.")
         return state.map(t => unselectElement(t))
       }
       // avoid adding repeat edge
       if (getEdgesBetween(action.source, action.target, state).length > 0) {
-        alert("hey you have linked them already!!")
+        alert("Oops! This connection already exists, no need to connect again.")
         return state.map(t => unselectElement(t))
       }
       if (edgeType == "us2r" && state.filter(t => filterEdgeOut(t, action.source)).length > 0) {
-        alert("I have mate already, don't be womanizer :(")
+        alert("Uh-oh… This user says is already connected to a response. Try deleting the existing connection first.")
         return state.map(t => unselectElement(t))
       }
       return [ ...state.map(t => unselectElement(t)), {
