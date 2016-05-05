@@ -198,21 +198,37 @@ const cyElements = (state = [], action) => {
       return [...state.map(unselectElement), ...getConversationComponent(action.cType, action.id, avgPos)]
 
     case 'ADD_EDGE':
-      // FIXME: temporarily avoid cycle in one intent
+      const sourceClass = state.filter(e => e.data.id == action.source)[0].classes
+      const targetClass = state.filter(e => e.data.id == action.target)[0].classes
+      let edgeType = ""
+      if (sourceClass == "user_says" && targetClass == "response") {
+        edgeType = "us2r"
+      }
+      else if  (sourceClass == "response" && targetClass == "user_says") {
+        edgeType = "r2us"
+      }
+      else {
+        alert("I can't be with you I'm straight :(")
+        return state.map(t => unselectElement(t))
+      }
+      // avoid cycle in one intent
       if (getEdgesBetween(action.target, action.source, state).length > 0) {
+        alert("don't make cycle!!!")
         return state.map(t => unselectElement(t))
       }
       // avoid adding repeat edge
       if (getEdgesBetween(action.source, action.target, state).length > 0) {
+        alert("hey you have linked them already!!")
         return state.map(t => unselectElement(t))
       }
-      if (action.edgeType == "us2r" && state.filter(t => filterEdgeOut(t, action.source)).length > 0) {
+      if (edgeType == "us2r" && state.filter(t => filterEdgeOut(t, action.source)).length > 0) {
+        alert("I have mate already, don't be womanizer :(")
         return state.map(t => unselectElement(t))
       }
       return [ ...state.map(t => unselectElement(t)), {
         group: "edges",
         data: {source: action.source, target: action.target, id: action.id},
-        classes: action.edgeType,
+        classes: edgeType,
       }]
     
     case "SAVE_USER_SAYS_PROPERTIES":

@@ -100,12 +100,7 @@ const Cy = React.createClass({
     if (this._edgeTo == null) {
         return
     }
-    if (this._edgeFrom.hasClass("user_says") && this._edgeTo.hasClass("response")) {
-      this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id(), "us2r");
-    }
-    else if (this._edgeFrom.hasClass("response") && this._edgeTo.hasClass("user_says")) {
-      this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id(), "r2us");
-    }
+    this.props.addEdge(this._edgeFrom.id(), this._edgeTo.id());
     this._edgeTo = null;
   },
 
@@ -142,8 +137,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addEdge: (source, target, type) => {
-      dispatch(addEdge(source, target, type));
+    addEdge: (source, target) => {
+      dispatch(addEdge(source, target));
     },
     showHideIntentProperties: (targetNode, nodeType) => {
       dispatch(showHideIntentProperties(targetNode, nodeType));
