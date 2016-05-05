@@ -6,14 +6,15 @@ const UserSaysProperty = ({ panel, onSaveUserSaysPropertiesClick, onUserSaysChan
     hidden={ panel.hideProperty }
     onSubmit={e => {
       e.preventDefault(); 
-      onSaveUserSaysPropertiesClick(panel.selectedNode, e.target.user_says.value);
+      onSaveUserSaysPropertiesClick(panel.selectedNode, e.target.user_says.value.replace(/;/g, "\n"));
     }} >
     <label>User Says</label>
-    <textarea 
+    <input 
       className="form-control" 
       name="user_says" 
-      rows={ panel.text.split("\n").length }
-      value={ panel.text }
+      placeholder="user says"
+      // rows={ panel.text.split("\n").length }
+      value={ panel.text.replace(/\n/g, ";") }
       onChange={e => onUserSaysChange(e.target.value)} />
     <button className="btn btn-default" type="submit">Save</button>
   </form>

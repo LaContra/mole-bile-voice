@@ -154,12 +154,14 @@ const cyElements = (state = [], action) => {
           data: { user_says: "", id: action.id },
           classes: "user_says",
           position: avgPos, 
+          selected: true,
         },
         {
           group: "nodes",
           data: { response: "", id: action.id+1, action: "" },
           classes: "response",
           position: { x: avgPos.x, y: avgPos.y+50 },
+          selected: true,
         },
         {
           group: "edges",
@@ -178,6 +180,7 @@ const cyElements = (state = [], action) => {
           data: { user_says: "", id: action.id },
           classes: "user_says",
           position: avgPos, 
+          selected: true,
         }
       ]
 
@@ -187,6 +190,7 @@ const cyElements = (state = [], action) => {
           data: { response: "", id: action.id, action: "" },
           classes: "response",
           position: avgPos, 
+          selected: true,
         }
       ]
 
@@ -194,21 +198,41 @@ const cyElements = (state = [], action) => {
       return [...state.map(unselectElement), ...getConversationComponent(action.cType, action.id, avgPos)]
 
     case 'ADD_EDGE':
-      // FIXME: temporarily avoid cycle in one intent
+      const sourceClass = state.filter(e => e.data.id == action.source)[0].classes
+      const targetClass = state.filter(e => e.data.id == action.target)[0].classes
+      let edgeType = ""
+      if (sourceClass == "user_says" && targetClass == "response") {
+        edgeType = "us2r"
+      }
+      else if (sourceClass == "response" && targetClass == "user_says") {
+        edgeType = "r2us"
+      }
+      else if (sourceClass == "user_says" && targetClass == "user_says") {
+        alert("Oops! Can’t connect two user says together. Try connecting a user says to a response instead.")
+        return state.map(t => unselectElement(t))
+      }
+      else {
+        alert("Uh-oh… Can’t connect two responses together. Try connecting a response to a user says instead.")
+        return state.map(t => unselectElement(t))
+      }
+      // avoid cycle in one intent
       if (getEdgesBetween(action.target, action.source, state).length > 0) {
+        alert("Uh-oh… The doggie is chasing its tail! Sorry we can’t handle cycle connections.")
         return state.map(t => unselectElement(t))
       }
       // avoid adding repeat edge
       if (getEdgesBetween(action.source, action.target, state).length > 0) {
+        alert("Oops! This connection already exists, no need to connect again.")
         return state.map(t => unselectElement(t))
       }
-      if (action.edgeType == "us2r" && state.filter(t => filterEdgeOut(t, action.source)).length > 0) {
+      if (edgeType == "us2r" && state.filter(t => filterEdgeOut(t, action.source)).length > 0) {
+        alert("Uh-oh… This user says is already connected to a response. Try deleting the existing connection first.")
         return state.map(t => unselectElement(t))
       }
       return [ ...state.map(t => unselectElement(t)), {
         group: "edges",
         data: {source: action.source, target: action.target, id: action.id},
-        classes: action.edgeType,
+        classes: edgeType,
       }]
     
     case "SAVE_USER_SAYS_PROPERTIES":

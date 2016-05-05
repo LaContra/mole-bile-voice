@@ -45,13 +45,12 @@ export const addConversationComponent = (cType) => {
   }
 }
 
-export const addEdge = (source, target, edgeType) => {
+export const addEdge = (source, target) => {
   return {
     type: "ADD_EDGE",
     source,
     target,
     id: intentId++,
-    edgeType
   }
 }
 
