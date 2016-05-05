@@ -1,7 +1,7 @@
 import LocalStorage from '../utils/LocalStorage'
 import { buildIntentsDataFromCyElements } from '../cy_canvas/helper'
 
-let intentId = parseInt(LocalStorage.getElements("elementId"));
+let intentId = parseInt(LocalStorage.getElements("elementId")) || 0;
 
 export const clearIntents = () => {
   return {
