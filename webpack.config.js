@@ -1,7 +1,7 @@
 module.exports = {
 	entry: './index.js',
 	output: {
-		path: __dirname, // Where to save the output file
+		path: __dirname + '/static/', // Where to save the output file
 		filename: 'bundle.js',
     	publicPath: '/static/'
 	},
