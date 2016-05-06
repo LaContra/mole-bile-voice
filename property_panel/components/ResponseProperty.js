@@ -24,7 +24,7 @@ const ResponseProperty = ({ panel, onSaveResponsePropertiesClick, onResponseChan
       name="action" 
       value={ panel.action }
       onChange={e => onActionChange(e.target.value)} />
-    <button className="btn btn-default" type="submit">Save</button>
+    <button className="btn btn-default element-section" type="submit">Save</button>
   </form>
 )
 

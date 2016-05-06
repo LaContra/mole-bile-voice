@@ -3,7 +3,6 @@ import IntentDeleteControl from '../containers/IntentDeleteControl'
 import IntentControl from '../containers/IntentControl'
 import UserSaysPropertyControl from '../containers/UserSaysPropertyControl'
 import ResponsePropertyControl from '../containers/ResponsePropertyControl'
-import IntentRequest from '../containers/IntentRequest'
 import APIKeySection from '../containers/APIKeySection'
 
 
@@ -13,7 +12,6 @@ const Panel = () => (
     <UserSaysPropertyControl />
     <ResponsePropertyControl />
     <IntentControl />
-    <IntentRequest />
     <APIKeySection />
   </div>
 )

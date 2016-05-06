@@ -17,7 +17,7 @@ const UserSaysProperty = ({ panel, onSaveUserSaysPropertiesClick, onUserSaysChan
       // rows={ panel.text.split("\n").length }
       value={ panel.text.replace(/\n/g, ";") }
       onChange={e => onUserSaysChange(e.target.value)} />
-    <button className="btn btn-default" type="submit">Save</button>
+    <button className="btn btn-default element-section" type="submit">Save</button>
   </form>
 )
 
