@@ -31,3 +31,16 @@ body {
     z-index: 100;
     background-color: lightgray;
 }
+
+.panel-section {
+    margin: 20px;
+    margin-top: 30px;
+}
+
+.element-section {
+    margin-top: 5px;
+}
+
+.item-space {
+    margin-left: 10px;
+}

@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
 
 const EntityName = ({ entityId, name, onEntityNameChange }) => (
-  <div>
+  <div className="element-section">
     <input type="text" 
+      className="form-control"
       placeholder="entity name"
       value={name}
       onChange={e => onEntityNameChange(entityId, e.target.value)}/>

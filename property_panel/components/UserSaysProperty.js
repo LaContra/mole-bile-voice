@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 
 const UserSaysProperty = ({ panel, onSaveUserSaysPropertiesClick, onUserSaysChange }) => (
   <form id="user_says_info" 
+    className="panel-section"
     action="#" 
     hidden={ panel.hideProperty }
     onSubmit={e => {

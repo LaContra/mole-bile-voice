@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 
 const ResponseProperty = ({ panel, onSaveResponsePropertiesClick, onResponseChange, onActionChange }) => (
   <form id="response_info" 
+    className="panel-section"
     action="#" 
     hidden={ panel.hideProperty }
     onSubmit={e => {
@@ -16,7 +17,7 @@ const ResponseProperty = ({ panel, onSaveResponsePropertiesClick, onResponseChan
       // rows={ panel.text.split("\n").length }
       value={ panel.text.replace(/\n/g, ";") }
       onChange={e => onResponseChange(e.target.value)} />
-    <label>Action</label>
+    <label className="element-section">Action</label>
     <input type="text"
       placeholder="action"
       className="form-control" 

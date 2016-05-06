@@ -6,12 +6,12 @@ import EntityList from '../components/EntityList'
 
 let EntityPanel = ({ entities, onEntityNameChange, onAddReferenceEntryClick, onReferenceValueChange, onSynonymsChange }) => (
   <div className="right_panel">
-    <EntityControl />
     <EntityList entities={entities}
       onEntityNameChange={onEntityNameChange}
       onAddReferenceEntryClick={onAddReferenceEntryClick}
       onReferenceValueChange={onReferenceValueChange}
       onSynonymsChange={onSynonymsChange}/>
+    <EntityControl />
   </div>
 )
 
