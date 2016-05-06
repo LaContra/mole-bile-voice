@@ -14,9 +14,16 @@ const DefaultVisualStyle = [
     selector: 'node.user_says',
     css: {
       'label': 'data(user_says)',
-      'shape': 'rectangle',
-      'background-color': 'yellow',
-      'text-outline-color': 'yellow',
+      'shape': 'triangle',
+      'background-color': '#cd84f5',
+      'text-outline-color': '#cd84f5',
+    }
+  }, 
+  {
+    selector: 'node.user_says:selected',
+    css: {
+      'background-color': '#4c0099',
+      'text-outline-color': '#4c0099',
     }
   }, 
   {
@@ -24,8 +31,15 @@ const DefaultVisualStyle = [
     css: {
       'label': 'data(response)',
       'shape': 'rectangle',
-      'background-color': 'blue',
-      'text-outline-color': 'blue',
+      'background-color': '#ffc162',
+      'text-outline-color': '#ffc162',
+    }
+  }, 
+  {
+    selector: 'node.response:selected',
+    css: {
+      'background-color': '#995700',
+      'text-outline-color': '#995700',
     }
   }, 
   {
@@ -35,15 +49,7 @@ const DefaultVisualStyle = [
     }
   }, 
   {
-    selector: 'edge.us2r',
-    css: {
-      'color': '#555',
-      'line-color': '#555',
-      'target-arrow-color': '#555',
-    }
-  },
-  {
-    selector: 'edge.r2us',
+    selector: 'edge',
     css: {
       'color': '#ccc',
       'line-color': '#ccc',
@@ -51,7 +57,7 @@ const DefaultVisualStyle = [
     }
   },
   {
-    selector: ':selected',
+    selector: 'edge:selected',
     css: {
       'background-color': 'black',
       'line-color': 'black',

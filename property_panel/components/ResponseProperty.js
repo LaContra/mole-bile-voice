@@ -12,7 +12,7 @@ const ResponseProperty = ({ panel, onSaveResponsePropertiesClick, onResponseChan
     <input 
       className="form-control" 
       name="response" 
-      placeholder="response"
+      placeholder="Use ; to separate response"
       // rows={ panel.text.split("\n").length }
       value={ panel.text.replace(/\n/g, ";") }
       onChange={e => onResponseChange(e.target.value)} />

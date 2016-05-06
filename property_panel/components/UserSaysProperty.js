@@ -12,7 +12,7 @@ const UserSaysProperty = ({ panel, onSaveUserSaysPropertiesClick, onUserSaysChan
     <input 
       className="form-control" 
       name="user_says" 
-      placeholder="user says"
+      placeholder="Use ; to separate user says"
       // rows={ panel.text.split("\n").length }
       value={ panel.text.replace(/\n/g, ";") }
       onChange={e => onUserSaysChange(e.target.value)} />
