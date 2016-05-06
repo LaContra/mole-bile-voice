@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react'
 import Entity from './Entity'
 
 const EntityList = ({ entities, onEntityNameChange, onAddReferenceEntryClick, onReferenceValueChange, onSynonymsChange }) => (
-  <div>
+  <div className="panel-section">
+    <h4>Add Entity</h4>
     {entities.map((entity, index) => 
       <Entity key={index}
         entityId={index}

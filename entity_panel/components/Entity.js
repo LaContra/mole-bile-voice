@@ -11,9 +11,11 @@ const Entity = ({ entityId, entity, onEntityNameChange, onAddReferenceEntryClick
       entries={entity.entries}
       onReferenceValueChange={onReferenceValueChange}
       onSynonymsChange={onSynonymsChange}/>
-    <button className="btn btn-default"
-      onClick={() => onAddReferenceEntryClick(entityId)}>Add Ref
-    </button>
+    <div className="element-section">
+      <button className="btn btn-default"
+        onClick={() => onAddReferenceEntryClick(entityId)}>Add Reference Value
+      </button>
+    </div>
   </div>
 )
 

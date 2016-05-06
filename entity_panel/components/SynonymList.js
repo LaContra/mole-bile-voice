@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react'
 
 const SynonymList = ({ entityId, refId, synonyms, onSynonymsChange }) => (
-  <div>
-    <input 
-      type="text" 
+  <div className="element-section">
+    <input type="text" 
+      className="form-control"
       placeholder="synonym list"
       value={synonyms.join(";")}
       onChange={e => onSynonymsChange(entityId, refId, e.target.value)}/>

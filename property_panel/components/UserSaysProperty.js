@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 
 const UserSaysProperty = ({ panel, onSaveUserSaysPropertiesClick, onUserSaysChange }) => (
   <form id="user_says_info" 
+    className="panel-section"
     action="#" 
     hidden={ panel.hideProperty }
     onSubmit={e => {
@@ -12,11 +13,11 @@ const UserSaysProperty = ({ panel, onSaveUserSaysPropertiesClick, onUserSaysChan
     <input 
       className="form-control" 
       name="user_says" 
-      placeholder="user says"
+      placeholder="Use ; to separate user says"
       // rows={ panel.text.split("\n").length }
       value={ panel.text.replace(/\n/g, ";") }
       onChange={e => onUserSaysChange(e.target.value)} />
-    <button className="btn btn-default" type="submit">Save</button>
+    <button className="btn btn-default element-section" type="submit">Save</button>
   </form>
 )
 
