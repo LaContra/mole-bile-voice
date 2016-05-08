@@ -2,6 +2,7 @@ import { unselectElement, getEdgesBetween,
   filterEdgeOut, modifyElement, getId,
   filterNode, getSourceId, getTargetId
 } from '../helper'
+import SessionStorage from '../../utils/SessionStorage'
 
 Array.prototype.average = function() {
   var sum = this.reduce(function(result, currentValue) {
@@ -142,6 +143,11 @@ const getConversationComponent = (type, id, position) => {
 
 const cyElements = (state = [], action) => {
   const avgPos = getAvgPos(state)
+  const undoSupportTypes = ['CLEAR_INTENTS', 'ADD_INTENT', 'ADD_USER_SAYS', 'ADD_RESPONSE', 
+    'ADD_CONVERSATION_COMPONENT', 'ADD_EDGE', 'SAVE_USER_SAYS_PROPERTIES', 'SAVE_RESPONSE_PROPERTIES', 'DELETE_ELEMENTS']
+  if (undoSupportTypes.indexOf(action.type) > -1) {
+    SessionStorage.addState(state)
+  }
 
   switch(action.type) {
     /* panel control */
@@ -258,7 +264,7 @@ const cyElements = (state = [], action) => {
                       && remainNodeIds.includes(getTargetId(t))
       )
     case "UNDO":
-      return state
+      return SessionStorage.popState()
     default:
       return state
   }
