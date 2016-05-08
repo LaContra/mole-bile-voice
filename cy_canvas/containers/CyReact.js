@@ -1,13 +1,19 @@
+import 'mousetrap'
 import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../../utils/LocalStorage'
-import { addEdge, showHideIntentProperties, selectElements } from '../../common/actions'
+import { addEdge, showHideIntentProperties, selectElements, undo } from '../../common/actions'
 import cytoscape from 'cytoscape'
 
 
 const Cy = React.createClass({
   componentDidMount: function() {
     this.createCy();
+    Mousetrap.bind(['a','command+z', 'ctrl+z'], this.props.undo);
+  },
+
+  componentWillUnmount: function() {
+    Mousetrap.unbind(['command+z', 'ctrl+z'], this.props.undo);
   },
 
   componentDidUpdate: function() {
@@ -145,6 +151,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     selectElements: (elements) => {
       dispatch(selectElements(elements));
+    },
+    undo: () => {
+      dispatch(undo())
     }
   }
 }
