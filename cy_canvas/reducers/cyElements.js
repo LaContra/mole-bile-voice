@@ -257,6 +257,8 @@ const cyElements = (state = [], action) => {
         filterNode(t) || remainNodeIds.includes(getSourceId(t)) 
                       && remainNodeIds.includes(getTargetId(t))
       )
+    case "UNDO":
+      return state
     default:
       return state
   }

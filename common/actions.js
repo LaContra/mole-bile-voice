@@ -448,3 +448,9 @@ export const saveKeys = () => {
     type: "SAVE_KEYS"
   }
 }
+
+export const undo = () => {
+  return {
+    type: "UNDO"
+  }
+}
