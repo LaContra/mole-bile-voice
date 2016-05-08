@@ -10,12 +10,12 @@ const Cy = React.createClass({
   componentDidMount: function() {
     this.createCy();
     Mousetrap.bind(['command+z', 'ctrl+z'], this.props.undo);
-    Mousetrap.bind(['command+shift+z', 'ctrl+y'], this.props.redo);
+    Mousetrap.bind(['command+shift+z', 'command+y', 'ctrl+y'], this.props.redo);
   },
 
   componentWillUnmount: function() {
     Mousetrap.unbind(['command+z', 'ctrl+z'], this.props.undo);
-    Mousetrap.unbind(['command+shift+z', 'ctrl+y'], this.props.redo);
+    Mousetrap.unbind(['command+shift+z', 'command+y', 'ctrl+y'], this.props.redo);
   },
 
   componentDidUpdate: function() {

@@ -146,18 +146,10 @@ const cyElements = (state = [], action) => {
   const undoSupportTypes = ['CLEAR_INTENTS', 'ADD_INTENT', 'ADD_USER_SAYS', 'ADD_RESPONSE', 
     'ADD_CONVERSATION_COMPONENT', 'ADD_EDGE', 'SAVE_USER_SAYS_PROPERTIES', 'SAVE_RESPONSE_PROPERTIES', 'DELETE_ELEMENTS']
 
-  const redoSupportTypes = ['ADD_INTENT', 'ADD_USER_SAYS', 'ADD_RESPONSE', 'ADD_CONVERSATION_COMPONENT']
-
-  // Only save state for UNDO when executing the supported action types
   if (undoSupportTypes.indexOf(action.type) > -1) {
     SessionStorage.addState(state)
+    SessionStorage.savePreviousAction(action)
   }
-
-  // Only save state for REDO when executing the supported action types
-  if (redoSupportTypes.indexOf(action.type) > -1) {
-    SessionStorage.savePreviousActionType(action.type)
-  }
-
 
   switch(action.type) {
     /* panel control */
