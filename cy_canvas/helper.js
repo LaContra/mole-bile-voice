@@ -75,17 +75,13 @@ const getIntents = (elements) => {
     return {
       userSaysId: userSaysNode.data.id,
       responseId: responseNodeId,
-      edgeId: getId(edge),
       userSayses: userSaysNode.data.user_says.split("\n"),
       responses: responseNode.data.response.split("\n"),
       action: responseNode.data.action,
+      name: `${userSaysNode.data.id}:${parseInt(userSaysNode.position.x)},${parseInt(userSaysNode.position.y)}_${getId(edge)}_${responseNodeId}:${parseInt(responseNode.position.x)},${parseInt(responseNode.position.y)}`,
+      // format: userSaysId:posX,posY_edgeId_responseId:posX,posY
+      id: `${userSaysNode.data.id}_${responseNodeId}`
     }
-  })
-}
-
-const assignIntentName = (intent) => {
-  return Object.assign({}, intent, {
-    name: `${intent.userSaysId}:${intent.userSayses[0]}+${intent.edgeId}:e+${intent.responseId}:${intent.responses[0]}`,
   })
 }
 
@@ -110,7 +106,8 @@ const getTargetIntent = (edge, intents) => {
 
 const getContextName = (fromIntent, toIntent, contextType) => {
   let intentWithEdge = contextType == "incoming" ? fromIntent : toIntent
-  return `${intentWithEdge.edge.data.id}_${fromIntent.name}_${toIntent.name}`.replace(/[ .]/g, '')
+  return `${intentWithEdge.edge.data.id}+${fromIntent.id}+${toIntent.id}`
+  // format: edgeId+fromUserSaysId_fromResponseId+toUserSaysId_toResponseId
 }
 
 const assignContextName = (intent, intents) => {
@@ -146,7 +143,7 @@ export const buildIntentsDataFromCyElements = (elements) => {
     return []
   }
 
-  const intents = getIntents(elements).map(assignIntentName)
+  const intents = getIntents(elements)
   return intents.map(i => assignInOutEdges(i, elements))
         .map(i => assignContextName(i, intents)).map(buildApiData)
 }
