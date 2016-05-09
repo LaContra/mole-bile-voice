@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const IntentButtons = ({ selectedElements, onAddIntentClick, onAddUserSaysClick, onAddResponseClick, onAddConversationComponent }) => (
+const IntentButtons = ({ onAddIntentClick, onAddUserSaysClick, onAddResponseClick, onAddConversationComponent }) => (
   <div>
     <div className='panel-section'>
       <h4>Basic Elements</h4>

@@ -2,7 +2,7 @@ import 'mousetrap'
 import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../../utils/LocalStorage'
-import { addEdge, showHideIntentProperties, selectElements, undo, redo } from '../../common/actions'
+import { addEdge, showHideIntentProperties, selectElements, undo, redo, deleteElements } from '../../common/actions'
 import cytoscape from 'cytoscape'
 
 
@@ -11,11 +11,15 @@ const Cy = React.createClass({
     this.createCy();
     Mousetrap.bind(['command+z', 'ctrl+z'], this.props.undo);
     Mousetrap.bind(['command+shift+z', 'command+y', 'ctrl+y'], this.props.redo);
+    Mousetrap.bind(['del', 'command+del', 'backspace', 'command+backspace'], () => {
+      this.props.delete(this.cy.$(":selected").jsons())
+    });
   },
 
   componentWillUnmount: function() {
-    Mousetrap.unbind(['command+z', 'ctrl+z'], this.props.undo);
-    Mousetrap.unbind(['command+shift+z', 'command+y', 'ctrl+y'], this.props.redo);
+    Mousetrap.unbind(['command+z', 'ctrl+z']);
+    Mousetrap.unbind(['command+shift+z', 'command+y', 'ctrl+y']);
+    Mousetrap.unbind(['del', 'command+del', 'backspace', 'command+backspace']);
   },
 
   componentDidUpdate: function() {
@@ -73,8 +77,6 @@ const Cy = React.createClass({
     // show or hide intent info editor
     this.cy.on('select, unselect', 'node', this.showHideIntentProperties);
 
-    this.cy.on('select, unselect', '', this.selectedElementsChanged);
-
   },
   
   dragNode: function(evt) {
@@ -122,10 +124,6 @@ const Cy = React.createClass({
     this.props.showHideIntentProperties(targetNode, type);
   },
 
-  selectedElementsChanged: function() {
-    this.props.selectElements(this.cy.$(":selected").jsons());
-  },
-
   saveToLocalStorage: function() {
     LocalStorage.saveElements([...this.cy.nodes().jsons(), ...this.cy.edges().jsons()])
   },
@@ -151,14 +149,14 @@ const mapDispatchToProps = (dispatch) => {
     showHideIntentProperties: (targetNode, nodeType) => {
       dispatch(showHideIntentProperties(targetNode, nodeType));
     },
-    selectElements: (elements) => {
-      dispatch(selectElements(elements));
-    },
     undo: () => {
       dispatch(undo())
     },
     redo: () => {
       dispatch(redo())
+    },
+    delete: (selectedElements) => {
+      dispatch(deleteElements(selectedElements))
     }
   }
 }
