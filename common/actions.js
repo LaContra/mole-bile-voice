@@ -1,4 +1,5 @@
 import LocalStorage from '../utils/LocalStorage'
+import SessionStorage from '../utils/SessionStorage'
 import { buildIntentsDataFromCyElements } from '../cy_canvas/helper'
 
 let intentId = parseInt(LocalStorage.getElements("elementId")) || 0;
@@ -452,5 +453,31 @@ export const saveKeys = () => {
 export const undo = () => {
   return {
     type: "UNDO"
+  }
+}
+
+export const redo = () => {
+  const action = SessionStorage.lastAction()
+  const redoSupportTypes = {
+    'ADD_INTENT': addIntent, 
+    'ADD_USER_SAYS': addUserSays, 
+    'ADD_RESPONSE': addResponse, 
+    'ADD_CONVERSATION_COMPONENT': addConversationComponent
+  }
+
+  return (dispatch) => {
+    const nextAction = redoSupportTypes[action.type]
+    switch (action.type) {
+      case 'ADD_INTENT':
+      case 'ADD_USER_SAYS':
+      case 'ADD_RESPONSE':
+        dispatch(nextAction())
+        break;
+      case 'ADD_CONVERSATION_COMPONENT':
+        dispatch(nextAction(action.cType))
+        break;
+      default:
+        break;
+    }
   }
 }

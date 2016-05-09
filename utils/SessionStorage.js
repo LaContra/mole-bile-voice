@@ -20,6 +20,13 @@ const SessionStorage = React.createClass({
       let newState = states.pop()
       SessionStorage.setStates(states)
       return typeof newState == 'undefined' ? [] : newState
+    },
+    savePreviousAction: (action) => {
+      sessionStorage.setItem("PREVIOUS_ACTION_TYPE", JSON.stringify(action))
+    },
+    lastAction: () => {
+      const action = JSON.parse(sessionStorage.getItem("PREVIOUS_ACTION_TYPE"))
+      return action == null ? {} : action
     }
   },
   render: function(){}

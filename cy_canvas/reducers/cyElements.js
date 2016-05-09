@@ -145,8 +145,10 @@ const cyElements = (state = [], action) => {
   const avgPos = getAvgPos(state)
   const undoSupportTypes = ['CLEAR_INTENTS', 'ADD_INTENT', 'ADD_USER_SAYS', 'ADD_RESPONSE', 
     'ADD_CONVERSATION_COMPONENT', 'ADD_EDGE', 'SAVE_USER_SAYS_PROPERTIES', 'SAVE_RESPONSE_PROPERTIES', 'DELETE_ELEMENTS']
+
   if (undoSupportTypes.indexOf(action.type) > -1) {
     SessionStorage.addState(state)
+    SessionStorage.savePreviousAction(action)
   }
 
   switch(action.type) {
