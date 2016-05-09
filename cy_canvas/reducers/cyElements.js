@@ -267,6 +267,11 @@ const cyElements = (state = [], action) => {
       )
     case "UNDO":
       return SessionStorage.popState()
+    case "COPY":
+      SessionStorage.saveCopiedNodes(action.elements)
+      return state
+    case "PASTE":
+      return state.concat(action.elements)
     default:
       return state
   }
