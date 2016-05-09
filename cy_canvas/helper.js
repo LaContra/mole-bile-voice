@@ -137,12 +137,12 @@ const buildApiData = (intent) => {
 
 export const buildIntentsDataFromCyElements = (elements) => {
   if (!verifyUserSayses(elements)) {
-    alert("Error: there is lonely user says, find it out!")
+    alert("The conversation currently starts with a lonely user says. Please add a response after it.")
     return []
   }
 
   if (!verifyResponses(elements)) {
-    alert("Error: there is lonely response, find it out!")
+    alert("The conversation currently starts with a lonely response. Please add a user says before it.")
     return []
   }
 
