@@ -1,12 +1,8 @@
 import { connect } from 'react-redux'
-import { clearIntents, deleteElements } from '../../common/actions'
+import { clearIntents } from '../../common/actions'
 import IntentDeleteButtons from '../components/IntentDeleteButtons'
 
-const mapStateToProps = (state) => { 
-  return {
-    selectedElements: state.intentControlPanel.selectedElements
-  }
-}
+const mapStateToProps = (state) => { return {} }
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -14,9 +10,6 @@ const mapDispatchToProps = (dispatch) => {
       if (confirm("Are you sure you want to clear all elements?")) {
         dispatch(clearIntents())
       }      
-    },
-    onDeleteClick: (elements) => {
-      dispatch(deleteElements(elements))
     }
   }
 }
