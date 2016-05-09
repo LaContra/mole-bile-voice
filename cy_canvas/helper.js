@@ -150,3 +150,8 @@ export const buildIntentsDataFromCyElements = (elements) => {
   return intents.map(i => assignInOutEdges(i, elements))
         .map(i => assignContextName(i, intents)).map(buildApiData)
 }
+
+export const removeEdgesAndAssignNewIds = (elements, currentId) => {
+  return {nodes: elements.filter(filterNode).map(node => 
+    Object.assign({}, node, { data: Object.assign({}, node.data, { id: currentId++ })} )), newId: currentId}
+}

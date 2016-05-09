@@ -2,13 +2,17 @@ import 'mousetrap'
 import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../../utils/LocalStorage'
-import { addEdge, showHideIntentProperties, selectElements, undo, redo, deleteElements } from '../../common/actions'
+import { addEdge, showHideIntentProperties, copy, parseAndPaste, undo, redo, deleteElements } from '../../common/actions'
 import cytoscape from 'cytoscape'
 
 
 const Cy = React.createClass({
   componentDidMount: function() {
     this.createCy();
+    Mousetrap.bind(['command+c', 'ctrl+c'], () => {
+      this.props.copy(this.cy.$(":selected").jsons())
+    });
+    Mousetrap.bind(['command+v', 'ctrl+v'], this.props.paste);
     Mousetrap.bind(['command+z', 'ctrl+z'], this.props.undo);
     Mousetrap.bind(['command+shift+z', 'command+y', 'ctrl+y'], this.props.redo);
     Mousetrap.bind(['del', 'command+del', 'backspace', 'command+backspace'], () => {
@@ -17,6 +21,8 @@ const Cy = React.createClass({
   },
 
   componentWillUnmount: function() {
+    Mousetrap.unbind(['command+c', 'ctrl+c']);
+    Mousetrap.unbind(['command+v', 'ctrl+v']);
     Mousetrap.unbind(['command+z', 'ctrl+z']);
     Mousetrap.unbind(['command+shift+z', 'command+y', 'ctrl+y']);
     Mousetrap.unbind(['del', 'command+del', 'backspace', 'command+backspace']);
@@ -148,6 +154,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     showHideIntentProperties: (targetNode, nodeType) => {
       dispatch(showHideIntentProperties(targetNode, nodeType));
+    },
+    copy: (selectedElements) => {
+      dispatch(copy(selectedElements))
+    },
+    paste: () => {
+      dispatch(parseAndPaste())
     },
     undo: () => {
       dispatch(undo())

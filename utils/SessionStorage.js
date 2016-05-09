@@ -27,6 +27,12 @@ const SessionStorage = React.createClass({
     lastAction: () => {
       const action = JSON.parse(sessionStorage.getItem("PREVIOUS_ACTION_TYPE"))
       return action == null ? {} : action
+    },
+    saveCopiedNodes: (elements) => {
+      sessionStorage.setItem("COPIED_NODES", JSON.stringify(elements))
+    },
+    getCopiedNodes: (elements) => {
+      return JSON.parse(sessionStorage.getItem("COPIED_NODES"))
     }
   },
   render: function(){}

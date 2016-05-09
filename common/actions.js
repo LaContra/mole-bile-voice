@@ -1,6 +1,6 @@
 import LocalStorage from '../utils/LocalStorage'
 import SessionStorage from '../utils/SessionStorage'
-import { buildIntentsDataFromCyElements } from '../cy_canvas/helper'
+import { buildIntentsDataFromCyElements, removeEdgesAndAssignNewIds } from '../cy_canvas/helper'
 
 let intentId = parseInt(LocalStorage.getElements("elementId")) || 0;
 
@@ -440,6 +440,28 @@ export const changeClientKey = (key) => {
 export const saveKeys = () => {
   return {
     type: "SAVE_KEYS"
+  }
+}
+
+export const copy = (elements) => {
+  return {
+    type: "COPY",
+    elements
+  }
+}
+
+const paste = (elements) => {
+  return {
+    type: "PASTE",
+    elements
+  }
+}
+
+export const parseAndPaste = () => {
+  return (dispatch) => {
+    const nodesInfo = removeEdgesAndAssignNewIds(SessionStorage.getCopiedNodes(), intentId)
+    intentId = nodesInfo.newId
+    dispatch(paste(nodesInfo.nodes))
   }
 }
 
