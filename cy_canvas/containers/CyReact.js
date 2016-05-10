@@ -180,6 +180,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     delete: (selectedElements) => {
       dispatch(deleteElements(selectedElements))
+      dispatch(showHideIntentProperties())
     }
   }
 }
