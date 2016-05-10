@@ -2,7 +2,10 @@ import 'mousetrap'
 import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../../utils/LocalStorage'
+<<<<<<< d723d6acbce216f2bcabe4a19a3b040869307cc8
 import SessionStorage from '../../utils/SessionStorage'
+=======
+>>>>>>> When clicking on one element, all other elements will be unselected.
 import { addEdge, showHideIntentProperties, copy, parseAndPaste, undo, redo, deleteElements, unselectElementsExcept } from '../../common/actions'
 import cytoscape from 'cytoscape'
 import SessionStorage from '../../utils/SessionStorage'
