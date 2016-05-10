@@ -33,6 +33,12 @@ const SessionStorage = React.createClass({
     },
     getCopiedNodes: (elements) => {
       return JSON.parse(sessionStorage.getItem("COPIED_NODES"))
+    },
+    setViewport: (position) => {
+      sessionStorage.setItem("VIEWPORT", JSON.stringify(position))
+    },
+    getViewport: () => {
+      return JSON.parse(sessionStorage.getItem("VIEWPORT"))
     }
   },
   render: function(){}
