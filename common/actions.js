@@ -164,10 +164,10 @@ const restoreEntity = (entity) => {
 const createContextEdges = (contexts, contextType) => {
   const edges = []
   for (let i = 0 ; i < contexts.length ; i++) {
-    // Contexnt name example: "9_1:u1+3:e+2:r1_6:u3+8:e+7:r2" => contextEdgeId_intent1_intent2
-    const potentialContextIds = contextType == 'incoming' ? contexts[i].split('_') : contexts[i].name.split('_')
-    const contextSourceId = parseInt(potentialContextIds[1].split('+')[2].split(':')[0]) // responseId of intent1
-    const contextTargetId = parseInt(potentialContextIds[2].split('+')[0].split(':')[0]) // userSaysId of intent2
+    // Contexnt name format: edgeId+fromUserSaysId_fromResponseId+toUserSaysId_toResponseId
+    const potentialContextIds = contexts[i].split('+')
+    const contextSourceId = parseInt(potentialContextIds[1].split('_')[1]) // responseId of intent1
+    const contextTargetId = parseInt(potentialContextIds[2].split('_')[0]) // userSaysId of intent2
 
     // Insert context edges
     edges.push({
@@ -184,104 +184,82 @@ const createContextEdges = (contexts, contextType) => {
 }
 
 const buildCyIntent = (intent) => {
-// {  
-//    "id":"d8a056c9-829f-4852-a68e-26e52c08b2dc",
-//    "name":"40: u2+r1",
-//    "auto":false,
-//    "contexts":[  
-
-//    ],
-//    "templates":[  
-//       "u22",
-//       "u2"
-//    ],
-//    "userSays":[  
-//       {  
-//          "data":[  
-//             {  
-//                "text":"u2"
-//             }
-//          ],
-//          "isTemplate":true,
-//          "count":0,
-//          "created":-1
-//       },
-//       {  
-//          "data":[  
-//             {  
-//                "text":"u22"
-//             }
-//          ],
-//          "isTemplate":false,
-//          "count":0,
-//          "created":-1
-//       }
-//    ],
-//    "responses":[  
-//       {  
-//          "resetContexts":false,
-//          "action":"a1",
-//          "affectedContexts":[  
-//             {  
-//                "name":"40:u2+r1_36:u3+r2",
-//                "parameters":{  
-
-//                }
-//             },
-//             {  
-//                "name":"40:u2+r1_42:u4+r2",
-//                "parameters":{  
-
-//                }
-//             }
-//          ],
-//          "parameters":[  
-
-//          ],
-//          "speech":[  
-//             "r1",
-//             "r11"
-//          ]
-//       }
-//    ],
-//    "state":"LOADED",
-//    "priority":500000,
-//    "webhookUsed":false
+// {
+//   "id": "3b314018-92b8-425d-85ca-cf83776620e3",
+//   "name": "753:270,180_755_754:270,230",
+//   "auto": false,
+//   "contexts": [
+//     "756+747_748+753_754"
+//   ],
+//   "templates": [
+//     "us"
+//   ],
+//   "userSays": [
+//     {
+//       "data": [
+//         {
+//           "text": "us"
+//         }
+//       ],
+//       "isTemplate": true,
+//       "count": 0,
+//       "created": -1
+//     }
+//   ],
+//   "responses": [
+//     {
+//       "resetContexts": false,
+//       "action": "aa",
+//       "affectedContexts": [
+//         {
+//           "name": "757+753_754+750_751",
+//           "parameters": {}
+//         }
+//       ],
+//       "parameters": [],
+//       "speech": "rr"
+//     }
+//   ],
+//   "state": "LOADED",
+//   "priority": 500000,
+//   "webhookUsed": false
 // }
 
-  // Intent name: 1:u1+3:e+2:r1 => userSaysId:text + edgeId:e + responseId:text
-  const potentialIds = intent.name.split('+')
-  const cyNodeIds = potentialIds.map(item => parseInt(item.split(':')[0]))
+  // Intent name: userSaysId:posX,posY_edgeId_responseId:posX,posY
+  const potentialIds = intent.name.split('_')
+  const cyElementIds = potentialIds.map(item => parseInt(item.split(':')[0]))
+  const cyNodePostions = [potentialIds[0], potentialIds[2]].map(item => item.split(':')[1].split(',').map(n => parseInt(n)))
   const response = intent.responses[0] 
   const speech = (response.speech instanceof Array) ? response.speech.join('\n'): response.speech
 
-  let cyIntentNodes = [
+
+  let cyIntentElements = [
     // Intent
     {
       group: "nodes",
-      data: { user_says: intent.templates.join('\n'), id: cyNodeIds[0] },
+      data: { user_says: intent.templates.join('\n'), id: cyElementIds[0] },
       classes: "user_says",
-      position: {x: 100, y: 100},
+      position: {x: cyNodePostions[0][0], y: cyNodePostions[0][1]},
     },
     {
       group: "nodes",
-      data: { response: speech, id: cyNodeIds[2], action: response.action },
+      data: { response: speech, id: cyElementIds[2], action: response.action },
       classes: "response",
-      position: {x: 140, y: 100},
+      position: {x: cyNodePostions[1][0], y: cyNodePostions[1][1]},
     },
     {
       group: "edges",
-      data: {source: cyNodeIds[0], target: cyNodeIds[2], id: cyNodeIds[1]},
+      data: {source: cyElementIds[0], target: cyElementIds[2], id: cyElementIds[1]},
       classes: "us2r",
     }
   ]
 
   // Context
   const incomingContexts = intent.contexts
-  const outgoingContexts = intent.responses[0].affectedContexts
-  cyIntentNodes = cyIntentNodes.concat(createContextEdges(incomingContexts, "incoming"), createContextEdges(outgoingContexts, "outgoing"))
+  const outgoingContexts = intent.responses[0].affectedContexts.map(item => item.name)
+  cyIntentElements = cyIntentElements.concat(createContextEdges(incomingContexts), createContextEdges(outgoingContexts))
 
-  return cyIntentNodes
+  return cyIntentElements
 
   // {
   //   group: "nodes",
