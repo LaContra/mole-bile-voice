@@ -108,6 +108,13 @@ export const deleteElements = (elements) => {
   }
 }
 
+export const unselectElementsExcept = (element) => {
+  return {
+    type: "UNSELECT_ELEMENTS_EXCEPT",
+    element
+  }
+}
+
 const TYPE_INTENTS = 'intents'
 const TYPE_ENTITIES = 'entities'
 

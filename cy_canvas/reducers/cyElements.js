@@ -264,14 +264,18 @@ const cyElements = (state = [], action) => {
       return remain.filter(t => 
         filterNode(t) || remainNodeIds.includes(getSourceId(t)) 
                       && remainNodeIds.includes(getTargetId(t))
-      )
+      ).map(t => unselectElement(t))
+    case "UNSELECT_ELEMENTS_EXCEPT":
+      return state.map(t => {
+        return t.data.id == action.element.data.id ? Object.assign({}, t, {selected: true}) : unselectElement(t)
+      })
     case "UNDO":
       return SessionStorage.popState()
     case "COPY":
       SessionStorage.saveCopiedNodes(action.elements)
       return state
     case "PASTE":
-      return state.concat(action.elements)
+      return [...state.map(t => unselectElement(t))].concat(action.elements)
     default:
       return state
   }

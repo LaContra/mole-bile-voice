@@ -2,7 +2,7 @@ import 'mousetrap'
 import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../../utils/LocalStorage'
-import { addEdge, showHideIntentProperties, copy, parseAndPaste, undo, redo, deleteElements } from '../../common/actions'
+import { addEdge, showHideIntentProperties, copy, parseAndPaste, undo, redo, deleteElements, unselectElementsExcept } from '../../common/actions'
 import cytoscape from 'cytoscape'
 
 
@@ -82,7 +82,7 @@ const Cy = React.createClass({
 
     // show or hide intent info editor
     this.cy.on('select, unselect', 'node', this.showHideIntentProperties);
-
+    this.cy.on('select', '', (e) => this.props.unselectElementsExcept(e.cyTarget.json()));
   },
   
   dragNode: function(evt) {
@@ -169,6 +169,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     delete: (selectedElements) => {
       dispatch(deleteElements(selectedElements))
+    },
+    unselectElementsExcept: (element) => {
+      dispatch(unselectElementsExcept(element))
     }
   }
 }
