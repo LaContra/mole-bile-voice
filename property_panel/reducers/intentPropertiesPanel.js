@@ -13,7 +13,7 @@ const intentPropertiesPanel = (state = {
 }, action) => {
   switch(action.type) {
     case 'SHOW_HIDE_INTENT_PROPERTY':
-      if (action.targetNode !== null) {
+      if (action.targetNode !== null && typeof action.targetNode != 'undefined') {
         return { 
           userSays: {
             hideProperty: action.nodeType != 'userSays',
