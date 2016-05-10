@@ -152,3 +152,18 @@ export const removeEdgesAndAssignNewIds = (elements, currentId) => {
   return {nodes: elements.filter(filterNode).map(node => 
     Object.assign({}, node, { data: Object.assign({}, node.data, { id: currentId++ })} )), newId: currentId}
 }
+
+export const getElementsWithOffset = (elements) => {
+  return elements.map(e => {
+    if (!filterNode(e)) {
+      return e
+    }
+    return Object.assign({}, e, { 
+      position: {
+        x: e.position.x + 40,
+        y: e.position.y + 40,
+      }
+    })
+  })
+}
+

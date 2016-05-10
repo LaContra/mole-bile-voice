@@ -1,6 +1,6 @@
 import { unselectElement, getEdgesBetween,
   filterEdgeOut, modifyElement, getId,
-  filterNode, getSourceId, getTargetId
+  filterNode, getSourceId, getTargetId, getElementsWithOffset
 } from '../helper'
 import SessionStorage from '../../utils/SessionStorage'
 
@@ -248,7 +248,7 @@ const cyElements = (state = [], action) => {
     case "UNDO":
       return SessionStorage.popState()
     case "COPY":
-      SessionStorage.saveCopiedNodes(action.elements)
+      SessionStorage.saveCopiedNodes(getElementsWithOffset(action.elements))
       return state
     case "PASTE":
       return state.concat(action.elements)
