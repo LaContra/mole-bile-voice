@@ -33,6 +33,13 @@ const SessionStorage = React.createClass({
     },
     getCopiedNodes: (elements) => {
       return JSON.parse(sessionStorage.getItem("COPIED_NODES"))
+    },
+    changeMultiSelectStatus: (allowMultiSelect) => {
+      sessionStorage.setItem("ALLOW_MULTI_SELECT", JSON.stringify(allowMultiSelect))
+    },
+    getMultiSelectStatus: () => {
+      const allowMultiSelect = JSON.parse(sessionStorage.getItem("ALLOW_MULTI_SELECT"))
+      return  allowMultiSelect == null ? false : allowMultiSelect
     }
   },
   render: function(){}

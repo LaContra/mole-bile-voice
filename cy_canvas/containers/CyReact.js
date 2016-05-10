@@ -2,6 +2,7 @@ import 'mousetrap'
 import React from 'react'
 import { connect } from 'react-redux'
 import LocalStorage from '../../utils/LocalStorage'
+import SessionStorage from '../../utils/SessionStorage'
 import { addEdge, showHideIntentProperties, copy, parseAndPaste, undo, redo, deleteElements, unselectElementsExcept } from '../../common/actions'
 import cytoscape from 'cytoscape'
 
@@ -18,6 +19,8 @@ const Cy = React.createClass({
     Mousetrap.bind(['del', 'command+del', 'backspace', 'command+backspace'], () => {
       this.props.delete(this.cy.$(":selected").jsons())
     });
+    Mousetrap.bind(['shift', 'command'],() => SessionStorage.changeMultiSelectStatus(true), 'keydown');
+    Mousetrap.bind(['shift', 'command'],() => SessionStorage.changeMultiSelectStatus(false), 'keyup');
   },
 
   componentWillUnmount: function() {
@@ -26,6 +29,7 @@ const Cy = React.createClass({
     Mousetrap.unbind(['command+z', 'ctrl+z']);
     Mousetrap.unbind(['command+shift+z', 'command+y', 'ctrl+y']);
     Mousetrap.unbind(['del', 'command+del', 'backspace', 'command+backspace']);
+    Mousetrap.unbind(['shift', 'command']);
   },
 
   componentDidUpdate: function() {
@@ -82,7 +86,11 @@ const Cy = React.createClass({
 
     // show or hide intent info editor
     this.cy.on('select, unselect', 'node', this.showHideIntentProperties);
-    this.cy.on('select', '', (e) => this.props.unselectElementsExcept(e.cyTarget.json()));
+    this.cy.on('select', '', (e) => {
+      if(!SessionStorage.getMultiSelectStatus()) {
+        this.props.unselectElementsExcept(e.cyTarget.json())
+      }
+    });
   },
   
   dragNode: function(evt) {
