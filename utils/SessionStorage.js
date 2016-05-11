@@ -39,6 +39,13 @@ const SessionStorage = React.createClass({
     },
     getViewport: () => {
       return JSON.parse(sessionStorage.getItem("VIEWPORT"))
+    },
+    changeMultiSelectStatus: (allowMultiSelect) => {
+      sessionStorage.setItem("ALLOW_MULTI_SELECT", JSON.stringify(allowMultiSelect))
+    },
+    getMultiSelectStatus: () => {
+      const allowMultiSelect = JSON.parse(sessionStorage.getItem("ALLOW_MULTI_SELECT"))
+      return  allowMultiSelect == null ? false : allowMultiSelect
     }
   },
   render: function(){}
