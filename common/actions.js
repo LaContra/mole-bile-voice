@@ -365,6 +365,25 @@ export const submitIntents = () => {
   }
 }
 
+export const createAndroidProject = () => {
+  const clientKey = LocalStorage.getClientKey()
+  return (dispatch) => {
+    return fetch('/project/zip', {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({clientKey: clientKey == null ?  '' : clientKey})
+    }).then(res => {
+      console.log(res)
+      return res.json()
+    }).then(json => {
+      window.open("./data/zip/"+json.filename);
+      console.log(json);
+    });
+  }
+}
+
 // Entity
 export const addEntity = () => {
   return {

@@ -67,9 +67,13 @@ body {
     right:0; 
 }
 
-#submit_btn {
-    margin-top: 12px;
+#submit_btn, #create_android_project_btn {
+    margin-top: 8px;
     margin-right: 20px;
+}
+
+#create_android_project_btn {
+    margin-right: 10px;
 }
 
 .web-title {
