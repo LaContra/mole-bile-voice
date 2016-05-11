@@ -4,9 +4,31 @@ import { buildIntentsDataFromCyElements, removeEdgesAndAssignNewIds } from '../c
 
 let intentId = parseInt(LocalStorage.getElements("elementId")) || 0;
 
-export const clearIntents = () => {
+const clearnIntentsAction = () => {
   return {
     type: "CLEAR_INTENTS"
+  }
+}
+
+export const clearIntents = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const intents = buildIntentsDataFromCyElements(state.cyElements)   
+
+    intents.forEach(intent => {
+      if (intent.id != '') {
+        fetch('https://api.api.ai/v1/intents/' + intent.id + '?v=20160510', {
+          method: 'DELETE',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + LocalStorage.getDevKey()
+          }),
+          body: JSON.stringify(intent)
+        }).then((res) => {console.log(res)});
+      }
+    })
+
+    dispatch(clearnIntentsAction())
   }
 }
 
@@ -244,6 +266,7 @@ const buildCyIntent = (intent) => {
     // Intent
     {
       group: "nodes",
+      intentId: intent.id,
       data: { user_says: intent.templates.join('\n'), id: cyElementIds[0] },
       classes: "user_says",
       position: {x: cyNodePostions[0][0], y: cyNodePostions[0][1]},
@@ -305,16 +328,31 @@ export const fetchEntities = () => {
   return fetchAgentInfos(TYPE_ENTITIES, restoreEntity)
 }
 
-const sendCreateIntentRequest = (intents) => {
+const sendCreateIntentRequest = (intent) => {
+  const intentId = intent.id
+  const requestType = intentId == '' ? 'POST' : 'PUT'
+  const extraPath = intentId == '' ? '' : '/' + intentId
+
   return (dispatch) => {
-    return fetch('/api/intents?v=20160416', {
-      method: 'POST',
+    if (requestType == 'POST') {
+      SessionStorage.increaseCreateIntentsNumber()
+    }
+
+    return fetch('/api/intents' + extraPath + '?v=20160416', {
+      method: requestType,
       headers: new Headers({
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + LocalStorage.getDevKey()
       }),
-      body: JSON.stringify(intents)
-    }).then((res) => {console.log(res)});
+      body: JSON.stringify(intent)
+    }).then((res) => {
+      console.log(res)
+      const currentNumber = SessionStorage.decreaseCreateIntentsNumber()
+      if (currentNumber == 0) {
+        dispatch(clearnIntentsAction())
+        dispatch(fetchIntents())
+      }
+    });
   }
 }
 
