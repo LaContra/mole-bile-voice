@@ -1,11 +1,16 @@
 var express= require('express');
 var path = require('path');
+var bodyParser = require('body-parser');
+var request = require('request');
 
 var app = express();
 
 var static_path = path.join(__dirname, './');
 
 app.enable('trust proxy');
+app.use(bodyParser.json());         
+app.use(bodyParser.urlencoded({ extended: true }));                                
+
 
 app.route('/').get(function(req, res) {
     res.header('Cache-Control', "max-age=60, must-revalidate, private");
@@ -13,6 +18,29 @@ app.route('/').get(function(req, res) {
         root: static_path
     });
 });
+
+app.route(/api\/.*/).post(proxy);
+app.route(/api\/.*/).get(proxy);
+app.route(/api\/.*/).put(proxy);
+
+
+function proxy(req, response) {
+  request(
+    {
+      method: req.method,
+      url: "https://api.api.ai/v1/" + req.url.replace("/api/", ""), 
+      headers: {
+        'content-type': 'application/json',
+        'authorization': req.headers.authorization
+      },
+      body: JSON.stringify(req.body),
+    },
+    function(err, res, body) {
+      response.status(res.statusCode).send(body)
+    }
+  )
+}
+
 
 function nocache(req, res, next) {
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');

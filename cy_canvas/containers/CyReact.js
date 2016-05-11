@@ -5,7 +5,6 @@ import LocalStorage from '../../utils/LocalStorage'
 import SessionStorage from '../../utils/SessionStorage'
 import { addEdge, showHideIntentProperties, copy, parseAndPaste, undo, redo, deleteElements, unselectElementsExcept } from '../../common/actions'
 import cytoscape from 'cytoscape'
-import SessionStorage from '../../utils/SessionStorage'
 
 
 const Cy = React.createClass({
