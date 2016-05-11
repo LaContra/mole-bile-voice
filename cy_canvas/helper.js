@@ -73,6 +73,7 @@ const getIntents = (elements) => {
     const edge = elements.filter(e => filterEdgeOut(e, userSaysNode.data.id) && filterEdgeIn(e, responseNodeId))[0]
 
     return {
+      intentId: typeof userSaysNode.intentId == 'undefined' ? '' : userSaysNode.intentId,
       userSaysId: userSaysNode.data.id,
       responseId: responseNodeId,
       userSayses: userSaysNode.data.user_says.split("\n"),
@@ -119,6 +120,7 @@ const assignContextName = (intent, intents) => {
 
 const buildApiData = (intent) => {
   return {
+    id: intent.intentId,
     name: intent.name,
     contexts: intent.contextsIn,
     templates: intent.userSayses,
