@@ -1,26 +1,8 @@
 import { unselectElement, getEdgesBetween,
   filterEdgeOut, modifyElement, getId,
-  filterNode, getSourceId, getTargetId
+  filterNode, getSourceId, getTargetId, getElementsWithOffset
 } from '../helper'
 import SessionStorage from '../../utils/SessionStorage'
-
-Array.prototype.average = function() {
-  var sum = this.reduce(function(result, currentValue) {
-    return result + parseInt(currentValue)
-  }, 0);
-  if (this.length == 0) {
-    return 0
-  }
-  return sum / this.length;
-};
-
-const getAvgPos = (elements) => {
-  const nodes = elements.filter(filterNode)
-  return {
-    x: nodes.map(n => n.position.x).average(),
-    y: nodes.map(n => n.position.y).average(),
-  }
-}
 
 const getConversationComponent = (type, id, position) => {
   switch(type) {
@@ -142,7 +124,7 @@ const getConversationComponent = (type, id, position) => {
 
 
 const cyElements = (state = [], action) => {
-  const avgPos = getAvgPos(state)
+  const initialPos = SessionStorage.getViewport()
   const undoSupportTypes = ['CLEAR_INTENTS', 'ADD_INTENT', 'ADD_USER_SAYS', 'ADD_RESPONSE', 
     'ADD_CONVERSATION_COMPONENT', 'ADD_EDGE', 'SAVE_USER_SAYS_PROPERTIES', 'SAVE_RESPONSE_PROPERTIES', 'DELETE_ELEMENTS']
 
@@ -161,14 +143,14 @@ const cyElements = (state = [], action) => {
           group: "nodes",
           data: { user_says: "", id: action.id },
           classes: "user_says",
-          position: avgPos, 
+          position: initialPos, 
           selected: true,
         },
         {
           group: "nodes",
           data: { response: "", id: action.id+1, action: "" },
           classes: "response",
-          position: { x: avgPos.x, y: avgPos.y+50 },
+          position: { x: initialPos.x, y: initialPos.y+50 },
           selected: true,
         },
         {
@@ -177,8 +159,6 @@ const cyElements = (state = [], action) => {
           classes: "us2r",
         }
       ]
-      // TODO: position
-      // position: { x: -this.state.cy.viewport().pan().x / this.state.cy.zoom() + 40, y: -this.state.cy.viewport().pan().y / this.state.cy.zoom() + 40 }
     case 'ADD_INTENT_WITH_DATA':
       return state.concat(action.intent)
 
@@ -187,7 +167,7 @@ const cyElements = (state = [], action) => {
           group: "nodes",
           data: { user_says: "", id: action.id },
           classes: "user_says",
-          position: avgPos, 
+          position: initialPos, 
           selected: true,
         }
       ]
@@ -197,13 +177,13 @@ const cyElements = (state = [], action) => {
           group: "nodes",
           data: { response: "", id: action.id, action: "" },
           classes: "response",
-          position: avgPos, 
+          position: initialPos, 
           selected: true,
         }
       ]
 
     case 'ADD_CONVERSATION_COMPONENT':
-      return [...state.map(unselectElement), ...getConversationComponent(action.cType, action.id, avgPos)]
+      return [...state.map(unselectElement), ...getConversationComponent(action.cType, action.id, initialPos)]
 
     case 'ADD_EDGE':
       const sourceClass = state.filter(e => e.data.id == action.source)[0].classes
@@ -268,7 +248,7 @@ const cyElements = (state = [], action) => {
     case "UNDO":
       return SessionStorage.popState()
     case "COPY":
-      SessionStorage.saveCopiedNodes(action.elements)
+      SessionStorage.saveCopiedNodes(getElementsWithOffset(action.elements))
       return state
     case "PASTE":
       return state.concat(action.elements)

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import LocalStorage from '../../utils/LocalStorage'
 import { addEdge, showHideIntentProperties, copy, parseAndPaste, undo, redo, deleteElements } from '../../common/actions'
 import cytoscape from 'cytoscape'
+import SessionStorage from '../../utils/SessionStorage'
 
 
 const Cy = React.createClass({
@@ -83,6 +84,16 @@ const Cy = React.createClass({
     // show or hide intent info editor
     this.cy.on('select, unselect', 'node', this.showHideIntentProperties);
 
+    this.cy.ready(this.setViewport)
+    this.cy.on('pan', this.setViewport)
+
+  },
+
+  setViewport: function(evt) {
+    SessionStorage.setViewport({
+      x: -evt.cy.pan().x / evt.cy.zoom() + 40,
+      y: -evt.cy.pan().y / evt.cy.zoom() + 40,
+    })
   },
   
   dragNode: function(evt) {
