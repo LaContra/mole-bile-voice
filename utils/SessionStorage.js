@@ -39,6 +39,23 @@ const SessionStorage = React.createClass({
     },
     getViewport: () => {
       return JSON.parse(sessionStorage.getItem("VIEWPORT"))
+    },
+    setCreateIntentsNumber: (number) => {
+      sessionStorage.setItem("CREATE_INTENS_NUMBER", JSON.stringify(number))
+    },
+    getCreateIntentsNumber: () => {
+      const number = parseInt(JSON.parse(sessionStorage.getItem("CREATE_INTENS_NUMBER")))
+      return isNaN(number) || number < 0 ? 0 : number
+    },
+    increaseCreateIntentsNumber: () => {
+      const currentNumber = SessionStorage.getCreateIntentsNumber() + 1
+      SessionStorage.setCreateIntentsNumber(currentNumber)
+      return currentNumber
+    },
+    decreaseCreateIntentsNumber: () => {
+      const currentNumber = SessionStorage.getCreateIntentsNumber() - 1
+      SessionStorage.setCreateIntentsNumber(currentNumber)
+      return currentNumber
     }
   },
   render: function(){}
