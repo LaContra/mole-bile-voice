@@ -17,7 +17,7 @@ export const clearIntents = () => {
 
     intents.forEach(intent => {
       if (intent.id != '') {
-        fetch('https://api.api.ai/v1/intents/' + intent.id + '?v=20160510', {
+        fetch('/api/intents/' + intent.id + '?v=20160510', {
           method: 'DELETE',
           headers: new Headers({
             'Content-Type': 'application/json',

@@ -22,6 +22,7 @@ app.route('/').get(function(req, res) {
 app.route(/api\/.*/).post(proxy);
 app.route(/api\/.*/).get(proxy);
 app.route(/api\/.*/).put(proxy);
+app.route(/api\/.*/).delete(proxy);
 
 
 function proxy(req, response) {
