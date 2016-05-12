@@ -212,21 +212,20 @@ const restoreEntity = (entity) => {
   }
 }
 
-const createContextEdges = (contexts, contextType) => {
+const createContextEdges = (responseId, contexts) => {
   const edges = []
   for (let i = 0 ; i < contexts.length ; i++) {
     // Contexnt name format: edgeId+fromUserSaysId_fromResponseId+toUserSaysId_toResponseId
-    const potentialContextIds = contexts[i].split('+')
-    const contextSourceId = parseInt(potentialContextIds[1].split('_')[1]) // responseId of intent1
-    const contextTargetId = parseInt(potentialContextIds[2].split('_')[0]) // userSaysId of intent2
-
+    const contextTargetId = contexts[i].substr(3).split('_')[0]
+    
     // Insert context edges
     edges.push({
       group: "edges",
       data: {
-        source: contextSourceId,
+        source: responseId,
         target: contextTargetId,
-        id: parseInt(potentialContextIds[0])},
+        id: `${responseId}_${contextTargetId}`
+      },
       classes: "r2us",
     })
   }
@@ -278,7 +277,7 @@ const buildCyIntent = (intent) => {
 
   // Intent name: userSaysId:posX,posY_edgeId_responseId:posX,posY
   const potentialIds = intent.name.split('_')
-  const cyElementIds = potentialIds.map(item => parseInt(item.split(':')[0]))
+  const cyElementIds = potentialIds.map(item => item.split(':')[0])
   const cyNodePostions = [potentialIds[0], potentialIds[2]].map(item => item.split(':')[1].split(',').map(n => parseInt(n)))
   const response = intent.responses[0] 
   const speech = (response.speech instanceof Array) ? response.speech.join('\n'): response.speech
@@ -307,9 +306,8 @@ const buildCyIntent = (intent) => {
   ]
 
   // Context
-  const incomingContexts = intent.contexts
   const outgoingContexts = intent.responses[0].affectedContexts.map(item => item.name)
-  cyIntentElements = cyIntentElements.concat(createContextEdges(incomingContexts), createContextEdges(outgoingContexts))
+  cyIntentElements = cyIntentElements.concat(createContextEdges(cyElementIds[2], outgoingContexts))
 
   return cyIntentElements
 

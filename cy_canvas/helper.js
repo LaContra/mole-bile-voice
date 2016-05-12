@@ -15,7 +15,7 @@ export const filterNode = (element) => {
   return element.group == "nodes"
 }
 
-const filterEdge = (element) => {
+export const filterEdge = (element) => {
   return element.group == "edges"
 }
 
@@ -93,28 +93,21 @@ const assignInOutEdges = (intent, elements) => {
   })
 }
 
-const getSourceIntent = (edge, intents) => {
-  return intents.filter(intent => 
-    intent.responseId == edge.data.source
-  ).map(intent => Object.assign({}, intent, {edge: edge}))[0]
-}
-
 const getTargetIntent = (edge, intents) => {
   return intents.filter(intent =>
     intent.userSaysId == edge.data.target
-  ).map(intent => Object.assign({}, intent, {edge: edge}))[0]
+  )[0]
 }
 
-const getContextName = (fromIntent, toIntent, contextType) => {
-  let intentWithEdge = contextType == "incoming" ? fromIntent : toIntent
-  return `${intentWithEdge.edge.data.id}+${fromIntent.id}+${toIntent.id}`
-  // format: edgeId+fromUserSaysId_fromResponseId+toUserSaysId_toResponseId
+const getContextName = (toIntent) => {
+  return `to:${toIntent.id}`
+  // format: to:toUserSaysId_toResponseId
 }
 
 const assignContextName = (intent, intents) => {
   return Object.assign({}, intent, {
-    contextsIn: intent.edgesIn.map(e => getSourceIntent(e, intents)).map(i => getContextName(i, intent, "incoming")),
-    contextsOut: intent.edgesOut.map(e => getTargetIntent(e, intents)).map(i => getContextName(intent, i, "outgoing")),
+    contextsIn: intent.edgesIn.length > 0? [getContextName(intent)]: [],
+    contextsOut: intent.edgesOut.map(e => getTargetIntent(e, intents)).map(i => getContextName(i)),
   })
 }
 

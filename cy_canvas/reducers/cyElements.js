@@ -1,5 +1,5 @@
 import { unselectElement, getEdgesBetween,
-  filterEdgeOut, modifyElement, getId,
+  filterEdgeOut, modifyElement, getId, filterEdge,
   filterNode, getSourceId, getTargetId, getElementsWithOffset
 } from '../helper'
 import SessionStorage from '../../utils/SessionStorage'
