@@ -1,8 +1,18 @@
 import LocalStorage from '../utils/LocalStorage'
 import SessionStorage from '../utils/SessionStorage'
-import { buildIntentsDataFromCyElements, removeEdgesAndAssignNewIds } from '../cy_canvas/helper'
+import { buildIntentsDataFromCyElements, removeEdgesAndAssignNewIds, filterNode, getId } from '../cy_canvas/helper'
 
 let intentId = parseInt(LocalStorage.getElements("elementId")) || 0;
+
+const deleteIntentRequest = (intentRequestId) => {
+  fetch('/api/intents/' + intentRequestId + '?v=20160510', {
+    method: 'DELETE',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + LocalStorage.getDevKey()
+    })
+  }).then((res) => {console.log(res)});
+}
 
 const clearnIntentsAction = () => {
   return {
@@ -17,14 +27,7 @@ export const clearIntents = () => {
 
     intents.forEach(intent => {
       if (intent.id != '') {
-        fetch('/api/intents/' + intent.id + '?v=20160510', {
-          method: 'DELETE',
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + LocalStorage.getDevKey()
-          }),
-          body: JSON.stringify(intent)
-        }).then((res) => {console.log(res)});
+        deleteIntentRequest(intent.id)
       }
     })
 
@@ -123,10 +126,29 @@ export const showHideIntentProperties = (targetNode, nodeType) => {
   }
 }
 
-export const deleteElements = (elements) => {
+const deleteElementsAction = (elements) => {
   return {
     type: "DELETE_ELEMENTS",
     elements,
+  }
+}
+
+export const deleteElements = (elements) => {
+  return (dispatch, getState) => {
+    const allElements = getState().cyElements
+
+    const potentialDeletedIntentsIds = elements.filter(t => filterNode(t)).map(getId)
+    const potentialDeletedIntents = allElements.filter(ele => 
+      potentialDeletedIntentsIds.includes(ele.data.id)
+    )
+
+    potentialDeletedIntents.forEach(node => {
+      const intentRequestId = typeof node.intentId == 'undefined' ? '' : node.intentId
+      if (intentRequestId != '') {
+        deleteIntentRequest(intentRequestId)
+      }
+    })
+    dispatch(deleteElementsAction(elements))
   }
 }
 
